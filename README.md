@@ -1,4 +1,4 @@
-# Do You Hear the Python Sings
+# Do You Hear the Python Sing
 
 
 - 一直没想好给自己的教程起个什么样的名
