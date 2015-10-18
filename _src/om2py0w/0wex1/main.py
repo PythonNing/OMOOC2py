@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # 1w task
 # dairy system
 
@@ -11,3 +12,7 @@ line = raw_input(' >')
 f.write(line)
 f.write('\n')
 f.close()
+
+# to do list:
+# Chinese input?
+# continuous interaction
