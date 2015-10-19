@@ -35,7 +35,7 @@ f.close()
 
 ## 20151019
 * 安装了[Cygwin](https://cygwin.com/)，打算在Cygwin里测试中文输入
-* 发现另一个问题，在Cygwin下是不会一行一行读取代码，然后在遇到```raw_input```的时候提示输入。必须提前输入。
+* 发现另一个问题，在Cygwin下是不会一行一行读取代码，然后在遇到```raw_input```的时候提示输入。
+* 突然了解到原来前一个问题是因为没有进入python的交互模式，在Cygwin可以使用```-i```进入交互模式（[ref](http://www.pythondoc.com/pythontutorial27/interpreter.html)）。但是运行了script就会直接进入交互模式了。仍然不是解决办法。
 * 尝试输入中文成功。
-* 考虑换一种形式进行输入，日记直接作为argument
 * to do: 加日期，持续交互
