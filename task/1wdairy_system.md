@@ -39,3 +39,8 @@ f.close()
 * 突然了解到原来前一个问题是因为没有进入python的交互模式，在Cygwin可以使用```-i```进入交互模式（[ref](http://www.pythondoc.com/pythontutorial27/interpreter.html)）。但是运行了script就会直接进入交互模式了。仍然不是解决办法。
 * 尝试输入中文成功。
 * to do: 加日期，持续交互
+ 
+## 20151021
+* 先放下中文输入问题，重新设计code为可以持续交互。
+* 设想如下：
+    * 给出菜单，询问user是想要写新日记还是读取旧日记  
