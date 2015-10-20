@@ -14,6 +14,7 @@
 
 
 ---
+同步在github issue https://github.com/bambooom/OMOOC2py/issues/3
 
 ## 20151018
 
