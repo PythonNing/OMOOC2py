@@ -105,6 +105,6 @@ dairy()
         * cygwin一定需要```-i```才会进入交互模式
         * powershell撮合了脚本式编程和交互式编程，自由切换？
         * win7下没有其他可以输入中文的命令行又像powershell这样可以自由切换的吗？
-    * 由前面一个问题引发了另一问题，那就是powershell和cygwin是有什么不一样。从根本上，我可能就理解错了。
+    * 由前面一个问题引发了另一问题，那就是powershell和cygwin是有什么不一样。从根本上，我可能就理解错了。shell，terminal，console概念似乎都被我当成一样的东西了orz
     * localtime问题
 * 另外对Git还是完全不知道有啥用，研究下官方文档
