@@ -5,7 +5,7 @@
    * [一只眼眺望明日](seeingtomorrow.md)
 * [Fly me to the Moon](fly_me_to_the_moon.md)
    * 0w_start
-   * [0wd4](notes/0wd4.md)
+   * [0wd4](0wd4.md)
 * [Hacking to the Gate](hacking_to_the_gate.md)
    * [1w_dairy system](task/1wdairy_system.md)
 * [基础旋进](1sTry/README.md)
