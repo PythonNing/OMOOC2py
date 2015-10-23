@@ -20,7 +20,8 @@
 
 从最简单可以实现的部分开始做。
 
-<pre><code>print 'Here is the previous dairy.'
+```python
+print 'Here is the previous dairy.'
 f = open('new dairy.txt','a+')
 print f.read()
 
@@ -28,7 +29,7 @@ f = open('new dairy.txt','a')
 line = raw_input(' new dairy >')
 f.write('%s\n' % line)
 f.close()
-</code></pre>
+```
 
 * 环境配置：win/python 2.7.10/powershell
 * 以上几行在powershell里面测试的话,可以达到最基本要求，输入一行日记，保存为本地文件，再次运行打印过往日记。
@@ -52,7 +53,8 @@ f.close()
     * 如果user输入的选择不是1/2/3，则报错误信息再重新回到菜单
     * 之前想要用while实现持续交互，但现在发现其实不用，直接调用回主程序即可（想到最早学过一点C语言，记得C是不能在函数里面再调用自己的，python真自由）
 
-<pre><code>import os
+```python
+import os
 from time import localtime, strftime
 
 def dairy():
@@ -89,7 +91,7 @@ def read():
 	dairy() # return to the menu
 	
 dairy()
-</code></pre>
+```
 
 ### 测试结果
 * Powershell：正常，虽然还是显示/输入不了中文，但持续交互目的达成
@@ -119,3 +121,43 @@ dairy()
 ## 20151022
 * 想起在芝麻星有看到卡片后面的hint中提到过[docopt](http://docopt.org/)，但并未认真研究是个啥怎么用，看到有位同学有用到 mark一下
 * 另有一位同学的日记系统有新加一项清空旧日记的功能，也可以尝试
+
+## 20151023
+因为昨天的公开课，看了大妈的任务演示，发现自己对1w任务要求的理解有偏差，所以其实根本就没做到符合要求，所以在开始2w的任务前，重新做了一次。然后就可以愉快的开始2w的GUI了~
+
+```python
+# -*- coding: utf-8 -*- 
+# ----------1w task:simple diary system----------
+# --------------created by bambooom--------------         
+
+from time import localtime, strftime
+
+def diary():
+	f = open('diary log.txt','a+')
+	print 'Below is the previous dairy.'
+	print f.read() # print out the previous diary log
+	
+	f = open('diary log.txt','a') # re-open the file to write
+	line = raw_input('Input New Diary >')
+	a = ['q','quit']
+	b = ['h','help','?']
+	
+	while line.lower() not in a: # while not to quit, loop to ask for input 	 	
+		if line.lower() in a: 
+			break # to quit the loop, not to input new diary
+		elif line.lower() in b:
+			print """ 
+			Input h/help/? for help.
+			Input q/quit to quit the process.
+			""" # print the help
+		
+		edit_time = strftime("%a, %Y %b %d %H:%M:%S", localtime())
+		f.write('%s     %s\n' % (edit_time, line))
+		line = raw_input('Input New Diary >')
+	
+	print 'Bye! Good Day!'
+	f.close()
+
+if __name__ == '__main__':
+	diary()
+```
