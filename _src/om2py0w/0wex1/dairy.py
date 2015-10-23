@@ -1,41 +1,34 @@
-# -*- coding: utf-8 -*-
-# 1w task
-# dairy system
+# -*- coding: utf-8 -*- 
+# ----------1w task:simple diary system----------
+# --------------created by bambooom--------------         
 
-import os
 from time import localtime, strftime
 
-def dairy():
-	print """
-	Choose from the menu below:
-	1. Write new dairy
-	2. Read previous dairy
-	3. Quit """
-	
-	choice = raw_input('Input 1/2/3 >') # ask for choosing from menu
-	
-	if choice == '1':
-		write() # write new dairy
-	elif choice == '2':
-		read() # read previous dairy
-	elif choice == '3':
-		os._exit(0) # exit the script
-	else:
-		print 'Wrong number. Choose again!'
-		dairy() # return to the beginning menu
-
-def write():
-	f = open('new dairy.txt','a') 
-	line = raw_input('Input here >')
-	edit_time = strftime("%a, %Y %b %d %H:%M:%S", localtime())
-	f.write('%s     %s\n' % (edit_time, line))
-	f.close()
-	dairy()
-
-def read():
-	f = open('new dairy.txt','a+')
+def diary():
+	f = open('diary log.txt','a+')
 	print 'Below is the previous dairy.'
-	print f.read()
-	dairy()
+	print f.read() # print out the previous diary log
 	
-dairy()
+	f = open('diary log.txt','a') # re-open the file to write
+	line = raw_input('Input New Diary >')
+	a = ['q','quit']
+	b = ['h','help','?']
+	
+	while line.lower() not in a: # while not to quit, loop to ask for input 	 	
+		if line.lower() in a: 
+			break # to quit the loop, not to input new diary
+		elif line.lower() in b:
+			print """ 
+			Input h/help/? for help.
+			Input q/quit to quit the process.
+			""" # print the help
+		
+		edit_time = strftime("%a, %Y %b %d %H:%M:%S", localtime())
+		f.write('%s     %s\n' % (edit_time, line))
+		line = raw_input('Input New Diary >')
+	
+	print 'Bye! Good Day!'
+	f.close()
+
+if __name__ == '__main__':
+	diary()
