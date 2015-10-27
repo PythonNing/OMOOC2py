@@ -29,6 +29,11 @@ From LPTHW
 | ```exit``` | exit the shell |
 | ```runas``` | Danger!become super user root |
 
+* ```mkdir ..temp/"I have fun"```使用引号创建包含空格的名字的目录
+* 一般使用```/```表示路径，在win下```\```有相同功能
+* 使用```cd ../../..```往上层目录移动
+* ``cd ~``回到home路径
+* 
 
 
 
