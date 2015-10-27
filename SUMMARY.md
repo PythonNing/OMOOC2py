@@ -4,6 +4,7 @@
    * [一只眼找寻昨日](seeingyesterday.md)
    * [一只眼眺望明日](seeingtomorrow.md)
 * [0MOOC](0MOOC/README.md)
+   * CLI
 * [Fly me to the Moon](fly_me_to_the_moon.md)
    * 0w_start
    * [0wd4](0wd4.md)
