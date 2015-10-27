@@ -3,7 +3,7 @@
 * [Do you hear the Python sing](README.md)
    * [一只眼找寻昨日](seeingyesterday.md)
    * [一只眼眺望明日](seeingtomorrow.md)
-* [0MOOC](0MOOC/README.md)
+* [Start From Here](0MOOC/README.md)
    * [CLI](0MOOC/cli.md)
 * [Fly me to the Moon](fly_me_to_the_moon.md)
    * 0w_start
