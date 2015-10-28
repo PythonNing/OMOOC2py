@@ -43,6 +43,9 @@ From LPTHW
 * ```cp a.txt b/```复制a.txt到b这个目录下面
 * ```mv a.txt b.txt```重命名a.txt为b.txt
 * ```more test.txt```可以逐页浏览文件，windows用空格键往下翻页
+* ```cat test.txt```一次性显示所有文件内容
+* ```rm a.txt```删除文件
+* ```rm -r directory```删除目录以及目录下文件
 
 
-
+http://ss64.com/
