@@ -49,3 +49,6 @@ From LPTHW
 
 
 http://ss64.com/
+
+for Powershell：
+* https://technet.microsoft.com/en-us/library/ee221100.aspx
