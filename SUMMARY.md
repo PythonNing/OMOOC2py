@@ -5,6 +5,7 @@
    * [一只眼眺望明日](seeingtomorrow.md)
 * [Start From Here](0MOOC/README.md)
    * [CLI](0MOOC/cli.md)
+   * Class
 * [Fly me to the Moon](fly_me_to_the_moon.md)
    * 0w_start
    * [0wd4](0wd4.md)
