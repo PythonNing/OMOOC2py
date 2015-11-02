@@ -21,5 +21,5 @@
    * [教程该怎么写](draft/how2tutorial.md)
 * [有关](ABOUT.md)
 * [Private Selection](NERV/private_selection.md)
-   * EVA
+   * [EVA](NERV/eva.md)
 
