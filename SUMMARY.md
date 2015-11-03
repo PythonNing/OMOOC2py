@@ -6,7 +6,7 @@
 * [Start From Here](0MOOC/README.md)
    * [CLI](0MOOC/cli.md)
    * [Class](0MOOC/class.md)
-   * Git
+   * [Git](0MOOC/git2.md)
 * [Fly me to the Moon](fly_me_to_the_moon.md)
    * 0w_start
    * [0wd4](0wd4.md)
