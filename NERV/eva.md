@@ -34,6 +34,8 @@
 ### 其他
 * 也不知道有没有说清楚，但是大概就是这种感受吧~
 * 顺手搜到的一些东西，都比较旧了
-	* 十大经典场景
-	* 经典台词
+	* [十大经典场景](http://blog.xuite.net/nakisasuki/FantasyWishes/6490615-%E6%96%B0%E4%B8%96%E7%B4%80%E7%A6%8F%E9%9F%B3%E6%88%B0%E5%A3%AB+___+%E7%B6%93%E5%85%B8%E7%95%AB%E9%9D%A2((EVA)))
+	* [经典台词](http://www.douban.com/note/249454669/)
+
 ![](eva.jpg)
+
