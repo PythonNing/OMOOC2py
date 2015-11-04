@@ -1,3 +1,4 @@
+# !/usr/bin/env python
 # -*- coding: utf-8 -*- 
 # ----------3w task:MyDiaryNet CLI----------
 # -------------author: bambooom-------------  
