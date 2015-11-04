@@ -14,7 +14,7 @@
    * [2wd4](notes/2wd4.md)
 * [Hacking to the Gate](hacking_to_the_gate.md)
    * [1w_dairy system](task/1wdairy_system.md)
-   * 3w_MyDiaryNet
+   * [3w_MyDiaryNet](test/3w_mydiarynet.md)
 * [基础旋进](1sTry/README.md)
 * [迭代作品](2nDev/README.md)
 * [人生首秀](3rDemo/README.md)
