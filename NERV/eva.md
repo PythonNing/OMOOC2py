@@ -1,7 +1,7 @@
 # EVA
 
 ## Neon Genesis Evangelion 新世纪福音战士
-全称其实上面这个，还记得大妈的title是CEO吗？而E是Evangelion，而不是Executive噢~所以第一篇当然是提EVA，这个古老的话题。
+全称其实上面这个，还记得大妈的title是CEO吗？而E是Evangelist，而不是Executive噢~所以第一篇当然是提EVA，这个古老的话题。
 
 ![](b17eca8065380cd7a3f2a3b8a244ad34588281f2.jpg)
 
