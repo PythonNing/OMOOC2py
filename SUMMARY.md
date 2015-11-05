@@ -12,6 +12,7 @@
    * [0wd4](0wd4.md)
    * [1wd4](notes/1wd4.md)
    * [2wd4](notes/2wd4.md)
+   * 3wd4
 * [Hacking to the Gate](hacking_to_the_gate.md)
    * [1w_dairy system](task/1wdairy_system.md)
    * [3w_MyDiaryNet](task/3w_mydiarynet.md)
