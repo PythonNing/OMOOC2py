@@ -4,7 +4,7 @@
 MyDiary Web Application
 '''
 
-from bottle import request,route,run
+from bottle import request, route, run, template
 
 def check_login(username, password):
 	if username == 'abc' and password == 'abc':
@@ -15,14 +15,7 @@ def check_login(username, password):
 
 @route('/mydiary')
 def login():
-	return '''
-	<form action="/mydiary" method="post">
-	  Username: <input name="username" type="text" /><br>
-	  <textarea rows="50" col="100" />
-	  your diary here
-	  </textarea>
-	  </form>
-	'''
+	return template('diaryweb', diarylog="hello world")
 
 #@route('/login', method='POST')
 #def do_login():
