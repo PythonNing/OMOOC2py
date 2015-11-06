@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+'''
+MyDiary Web Application
+'''
+
 from bottle import request,route,run
 
 def check_login(username, password):
@@ -7,23 +13,26 @@ def check_login(username, password):
 		return False
 
 
-@route('/login')
+@route('/mydiary')
 def login():
 	return '''
-	<form action="/login" method="post">
-	  Username: <input name="username" type="text" />
-	  Password: <input name="password" type="password" />
-	  <input value="Login" type="submit" />
+	<form action="/mydiary" method="post">
+	  Username: <input name="username" type="text" /><br>
+	  <textarea rows="50" col="100" />
+	  your diary here
+	  </textarea>
 	  </form>
 	'''
 
-@route('/login', method='POST')
-def do_login():
-	username = request.forms.get('username')
-	password = request.forms.get('password')
-	if check_login(username, password):
-		return "<p>Your login information was correct.</p>"
-	else:
-		return "<p>Login failed.</p>"
+#@route('/login', method='POST')
+#def do_login():
+#	username = request.forms.get('username')
+#	password = request.forms.get('password')
+#	if check_login(username, password):
+#		return "<p>Your login information was correct.</p>"
+#	else:
+#		return "<p>Login failed.</p>"
 
-run(host='localhost', port=8080, debug=True)
+if __name__ == '__main__':
+	run(host='localhost', port=8250, debug=True, reloader=True)
+	
