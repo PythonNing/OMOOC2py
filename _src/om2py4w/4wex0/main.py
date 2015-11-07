@@ -14,8 +14,13 @@ def check_login(username, password):
 
 
 @route('/mydiary')
-def login():
-	return template('diaryweb', diarylog="hello world")
+def start():
+	return template('diaryweb', diarylog='hello world')
+
+@route('/mydiary', method='POST')
+def input_new():
+	newdiary = request.forms.get('newdiary')
+	return template('diaryweb', diarylog='hello world \n'+newdiary)
 
 #@route('/login', method='POST')
 #def do_login():

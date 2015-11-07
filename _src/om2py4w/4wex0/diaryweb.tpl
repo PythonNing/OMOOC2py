@@ -3,7 +3,7 @@
 <body>
 
 <form action="/mydiary" method="post">
-  Input here: <input type="text" name="newdiary" />
+  Input: <input type="text" name="newdiary" />
   <input value="Submit" type="submit" />
 </form>
 <br>
