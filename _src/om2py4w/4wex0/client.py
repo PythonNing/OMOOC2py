@@ -11,7 +11,6 @@ h = ['h','help','?']
 q = ['q','quit']
 r = ['r','sync']
 
-#coding=utf-8
 import urllib2
 import re
 content=urllib2.urlopen("http://localhost:8255/mydiary")
@@ -19,8 +18,12 @@ print "http header:",content.info()
 print "http status:",content.getcode()
 print "url:",content.geturl()
 log = content.read()
-text = str(re.findall(r'<textarea .*>.*</textarea>', log, re.DOTALL))
-print text
+text = re.findall(r'<textarea .*>.*</textarea>', log, re.DOTALL)
+text2 = text[0]
+#tag = re.findall(r'<.*?>', text2, re.DOTALL)
+#print text2
+text3 = re.sub(r'<.*?>', '', text2)
+print text3
 
 #s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #server_address = ('localhost/mydiary', 8255)
