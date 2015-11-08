@@ -20,6 +20,7 @@ def write_log(message):
 	data = urllib.urlencode(values)
 	req = urllib2.Request("http://localhost:8255/mydiary", data)
 	response = urllib2.urlopen(req)
+	response.close()
 
 def client():
 	h = ['h','help','?']
@@ -43,6 +44,7 @@ def client():
 			break
 		else:
 			write_log(message)
+
 
 if __name__ == '__main__':
 	client()
