@@ -6,7 +6,7 @@ web内网版笔记系统,可以通过网页或命令行访问,读取旧日记及
 * 下载main.py bottle.py diaryweb.tpl至同一目录下
 * 终端```cd 下载路径```
 * ```python main.py```
-* 浏览器打开http://localhost:8280/mydiary
+* 浏览器打开http://localhost:8255/mydiary
 
 ![](web_mydiary.PNG)
 
