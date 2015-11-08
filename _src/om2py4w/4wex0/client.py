@@ -12,13 +12,15 @@ def get_log():
 	html_code = response.read()
 	response.close()
 	text_area = re.findall(r'<textarea .*>.*</textarea>', html_code, re.DOTALL)
+	# re.DOTALL make '.' can also represent newline
 	log = re.sub(r'<.*?>', '', text_area[0])
+	# delete html tags
 	return log
 
 def write_log(message):
 	values = {'newdiary' : message}
 	data = urllib.urlencode(values)
-	req = urllib2.Request("http://localhost:8255/mydiary", data)
+	req = urllib2.Request("http://localhost:8255/mydiary", data) # post data
 	response = urllib2.urlopen(req)
 	response.close()
 
