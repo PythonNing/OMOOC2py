@@ -119,6 +119,7 @@ def do_login():
 	else:
 		return "<p>Login failed.</p>"
 ```
+
 * 打开网页http://localhost:8080/login就会显示出username和password两个输入框以及一个login的button
 * @route默认是以GET方法获取数据,所以直接return了一大段html code
 * 此段html code表示在网页创建表单forms,其中有username,password的输入框,并有一个login的button,这几个组件
@@ -159,8 +160,8 @@ def do_login():
 * 我的理解template就是html code,是决定网页展示出来效果的
 * bottle里面有最简单的simpleTemplate,非常简单,所以并不会好看,先放下美化这部分(美化这部分才需要用到jinja2和bootstrap)
 * [commit eb5e57a](https://github.com/bambooom/OMOOC2py/blob/eb5e57a131ba2bda020f88e0964e75f08d77026f/_src/om2py4w/4wex0/main.py)
-```python
 
+```python
 from bottle import route, run template
 
 @route('/mydiary')
