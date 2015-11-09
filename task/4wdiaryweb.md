@@ -91,13 +91,14 @@ def greet(name='Stranger'):
 run(host='localhost', port=8080, debug=True)
 ```
 * 定义了两个route都是同一个callback method
-* 但是打开http://localhost:8080/会显示"Hello Stranger.."
-* 而打开http://localhost:8080/hello/<name>都会显示出"Hello <name>, how are you?"
+* 但是打开http://localhost:8080/ 会显示"Hello Stranger.."
+* 而打开例如http://localhost:8080/hello/banana 都会显示出"Hello banana, how are you?"
 * 网址的name会传给greet
 * template模板相当于一个html的文件,bottle return出来的是html代码,传入浏览器,就可以将html用于显示网页
 
 ## HTTP请求方法
 [commit 66a6c83](https://github.com/bambooom/OMOOC2py/blob/66a6c839fa93f7528af2111c761afc1e49b02422/_src/om2py4w/4wex0/main.py)
+
 ```python
 from bottle import request,route,run
 @route('/login')
@@ -120,7 +121,7 @@ def do_login():
 		return "<p>Login failed.</p>"
 ```
 
-* 打开网页http://localhost:8080/login就会显示出username和password两个输入框以及一个login的button
+* 打开网页http://localhost:8080/login 就会显示出username和password两个输入框以及一个login的button
 * @route默认是以GET方法获取数据,所以直接return了一大段html code
 * 此段html code表示在网页创建表单forms,其中有username,password的输入框,并有一个login的button,这几个组件
 * 而在同一个网页需要获得用户输入的数据, 用POST方法表示用户提交表单.提交之后,用bottle中的```request.forms.get```获取输入数据.
@@ -178,6 +179,8 @@ run(host='localhost',port=8250, debug=True, reloader=True)
 * 搞定网页显示之后,就可以添加在输入框输入提交之后可以显示到文字框的功能
 * 其实就是结合POST提交表单以及request获取数据,最后用template传到网页
 * [commit 6c9821d](https://github.com/bambooom/OMOOC2py/blob/6c9821d3d6f82662b468cd1c022fe5ac512e205b/_src/om2py4w/4wex0/main.py)
+* 打开网页http://localhost:8250/mydiary就可以输入任何日记,点击submit或按回车键即可提交,并在文字框中看到输入的新日记
+
 ```python
 from bottle import request,route,run,template
 
@@ -192,11 +195,12 @@ def input_new():
 
 run(host='localhost', port=8250, debug=True, reloader=True)
 ```
-* 打开网页http://localhost:8250/mydiary就可以输入任何日记,点击submit或按回车键即可提交,并在文字框中看到输入的新日记
+
 
 ## 与file结合
 * 输入提交并打印功能完备,最后只需要打印以及输入新的日记放到server本地文件里面就可以了
 * [commit 0ed577f](https://github.com/bambooom/OMOOC2py/blob/0ed577fdb37858ba4653416982e909d3ff87ad3f/_src/om2py4w/4wex0/main.py)
+
 ```python
 from bottle import request, route, run, template
 
@@ -212,7 +216,8 @@ def input_new():
 	log = read_diary() # 读取更新后日记文件
 	return template("diaryweb", diarylog=log) #打印更新后日记文件在文字框中
 ```
-* 喜大普奔!bottle部分完成了!虽然还没有美化~
+
+喜大普奔!bottle部分完成了!虽然还没有美化~
 
 ---
 * 任务的另一半是客户端通过CLI也可以与网页端交互
