@@ -26,5 +26,5 @@
 * [有关](ABOUT.md)
 * [Private Selection](NERV/private_selection.md)
    * [EVA](NERV/eva.md)
-   * Kill yourself, or get over it
+   * [Kill yourself, or get over it](NERV/suicide.md)
 
