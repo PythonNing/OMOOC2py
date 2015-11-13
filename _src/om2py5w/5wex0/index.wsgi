@@ -15,23 +15,29 @@ from time import localtime, strftime
 app = Bottle()
 kv = sae.kvdb.Client()
 
-def read_diary(diary,tag):
+def read_diary_bykey(count):
 #	f = open('diary log.txt','a+')
 #	return f.read()
-	return kv.get(tag)['diary']
+	log = []
+	log.append(kv.get(count))
+	return log
 
-def write_diary(newdiary,tag):
+def write_diary(newdiary,count):
+	# key must be str()
+	count = str(count)
 	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
-	tag = "tag" + tag
 	diary = {'time':edit_time, 'diary':newdiary}
-	kv.set(tag,diary)
-	return diary
+	kv.set(count,diary)
 #	f = open('diary log.txt','a+')
 	
 #	f.write('%s    %s\n' % (edit_time, newdiary))
 #	f.close()
-diary = write_diary("hello world","hh")
-print read_diary(diary,"taghh")
+write_diary("hello world",1)
+write_diary("hello world again",2)
+#write_diary("hello world 2","hh2")
+print read_diary_bykey(str(1))
+print read_diary_bykey(str(2))
+#print read_diary("taghh2")
 
 
 
