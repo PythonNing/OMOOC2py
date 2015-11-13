@@ -16,13 +16,13 @@ app = Bottle()
 kv = sae.kvdb.Client()
 
 def read_diary_all():
-#	f = open('diary log.txt','a+')
+	diarylog = open('diary log.txt','a+').read()
 #	return f.read()
 	log = []
-	diarylog = ""
+#	diarylog = ""
 	for i in kv.get_by_prefix("count"):
 		log.append(i[1]) # i is type tuple with key-value
-		diarylog = diarylog +i[1]['time']+"    "+i[1]['diary']+"\n" 
+#		diarylog = diarylog +i[1]['time']+"    "+i[1]['diary']+"\n" 
 	#for j in range(count-1):
 	#	print log[j]['time'], log[j]['diary']
 	return log, diarylog
@@ -35,10 +35,9 @@ def write_diary(newdiary,count=1):
 	kv.set(countkey,diary)
 	count += 1
 
-#	f = open('diary log.txt','a+')
-	
-#	f.write('%s    %s\n' % (edit_time, newdiary))
-#	f.close()
+	f = open('diary log.txt','a+')
+	f.write('%s    %s\n' % (edit_time, newdiary))
+	f.close()
 #count = write_diary("hello world")
 #count = write_diary("hello world again",count)
 #print read_diary_all()
