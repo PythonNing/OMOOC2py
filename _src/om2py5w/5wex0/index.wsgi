@@ -14,11 +14,11 @@ from time import localtime, strftime
 
 app = Bottle()
 kv = sae.kvdb.Client()
+log = []
 
 def read_diary_bykey(count):
 #	f = open('diary log.txt','a+')
 #	return f.read()
-	log = []
 	log.append(kv.get(count))
 	return log
 
