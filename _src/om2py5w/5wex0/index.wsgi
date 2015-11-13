@@ -18,22 +18,20 @@ kv = sae.kvdb.Client()
 def read_diary(diary,tag):
 #	f = open('diary log.txt','a+')
 #	return f.read()
-	pass
+	return kv.get(tag)['diary']
 
 def write_diary(newdiary,tag):
 	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
 	tag = "tag" + tag
-	print tag
 	diary = {'time':edit_time, 'diary':newdiary}
-	print diary
 	kv.set(tag,diary)
+	return diary
 #	f = open('diary log.txt','a+')
 	
 #	f.write('%s    %s\n' % (edit_time, newdiary))
 #	f.close()
-write_diary("hello world","hh")
-print kv.get("taghh")
-
+diary = write_diary("hello world","hh")
+print read_diary(diary,"taghh")
 
 
 
