@@ -14,18 +14,16 @@ from time import localtime, strftime
 
 app = Bottle()
 kv = sae.kvdb.Client()
-log = []
 
-def read_diary_all(count):
+def read_diary_all():
 #	f = open('diary log.txt','a+')
 #	return f.read()
+	log = []
 	for i in kv.get_by_prefix("count"):
-		log.append(i)
-	print type(i)
-	print type(log)
+		log.append(i[1]) # i is type tuple with key-value
 	return log
 
-def write_diary(newdiary,count):
+def write_diary(newdiary,count=1):
 	# key must be str()
 	countkey = "count" + str(count)
 	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
@@ -37,19 +35,19 @@ def write_diary(newdiary,count):
 	
 #	f.write('%s    %s\n' % (edit_time, newdiary))
 #	f.close()
-count = write_diary("hello world",1)
-count = write_diary("hello world again",count)
-print read_diary_all(count)
+count = write_diary("hello world",count=1)
+#count = write_diary("hello world again",count)
+#print read_diary_all()
 #write_diary("hello world 2","hh2")
 #print read_diary_bykey(str(2))
 #print read_diary("taghh2")
 
 
 
-#@app.route('/')
-#def start():
-#	log = read_diary()
-#	return template("diarysae", diarylog=log)
+@app.route('/')
+def start():
+	log = read_diary_all()
+	return template("diarysae", diarylog=log)
 
 #@app.route('/', method='POST')
 #def input_new():
@@ -58,4 +56,4 @@ print read_diary_all(count)
 #	log = read_diary()
 #	return template("diarysae", diarylog=log)
 
-#application = sae.create_wsgi_app(app)
+application = sae.create_wsgi_app(app)
