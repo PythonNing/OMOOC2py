@@ -9,7 +9,11 @@ You can read the old diary and input new diary
 
 from bottle import Bottle, request, route, run, template
 import sae
+import sae.kvdb
 from time import localtime, strftime
+
+app = Bottle()
+kv = sae.kvdb.Client()
 
 def read_diary():
 	f = open('diary log.txt','a+')
@@ -20,8 +24,6 @@ def write_diary(newdiary):
 	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
 	f.write('%s    %s\n' % (edit_time, newdiary))
 	f.close()
-
-app = Bottle()
 
 @app.route('/')
 def start():
