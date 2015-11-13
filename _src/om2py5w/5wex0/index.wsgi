@@ -19,13 +19,15 @@ log = []
 def read_diary_all(count):
 #	f = open('diary log.txt','a+')
 #	return f.read()
-	for i in count:
-		log.append(kv.get(count))
+	for i in kv.get_by_prefix("count"):
+		log.append(i)
+	print type(i)
+	print type(log)
 	return log
 
 def write_diary(newdiary,count):
 	# key must be str()
-	countkey = str(count)
+	countkey = "count" + str(count)
 	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
 	diary = {'time':edit_time, 'diary':newdiary}
 	kv.set(countkey,diary)
@@ -37,7 +39,7 @@ def write_diary(newdiary,count):
 #	f.close()
 count = write_diary("hello world",1)
 count = write_diary("hello world again",count)
-print count
+print read_diary_all(count)
 #write_diary("hello world 2","hh2")
 #print read_diary_bykey(str(2))
 #print read_diary("taghh2")
