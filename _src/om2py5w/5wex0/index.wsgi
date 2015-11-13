@@ -18,9 +18,11 @@ kv = sae.kvdb.Client()
 def read_diary_all():
 #	f = open('diary log.txt','a+')
 #	return f.read()
-	log = []
+	log = ""
 	for i in kv.get_by_prefix("count"):
-		log.append(i[1]) # i is type tuple with key-value
+		log = log +i[1]['time']+"    "+i[1]['diary']+"\n" # i is type tuple with key-value
+	#for j in range(count-1):
+	#	print log[j]['time'], log[j]['diary']
 	return log
 
 def write_diary(newdiary,count=1):
@@ -35,8 +37,8 @@ def write_diary(newdiary,count=1):
 	
 #	f.write('%s    %s\n' % (edit_time, newdiary))
 #	f.close()
-count = write_diary("hello world",count=1)
-#count = write_diary("hello world again",count)
+count = write_diary("hello world")
+count = write_diary("hello world again",count)
 #print read_diary_all()
 #write_diary("hello world 2","hh2")
 #print read_diary_bykey(str(2))
