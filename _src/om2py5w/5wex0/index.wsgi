@@ -34,7 +34,7 @@ def write_diary(newdiary,count=1):
 	diary = {'time':edit_time, 'diary':newdiary}
 	kv.set(countkey,diary)
 	count += 1
-	return count
+
 #	f = open('diary log.txt','a+')
 	
 #	f.write('%s    %s\n' % (edit_time, newdiary))
@@ -50,16 +50,16 @@ def write_diary(newdiary,count=1):
 
 @app.route('/')
 def start():
-	log, diarylog = read_diary_all()
+	diarylog = read_diary_all()[1]
 	return template("diarysae", diarylog=diarylog)
 
 @app.route('/', method='POST')
 def input_new():
-	log, diarylog = read_diary_all()
+	log = read_diary_all()[0]
 	count = len(log)
 	newdiary = request.forms.get('newdiary')
 	write_diary(newdiary,count)
-	log, diarylog = read_diary_all()
+	diarylog = read_diary_all()[1]
 	return template("diarysae", diarylog=diarylog)
 
 application = sae.create_wsgi_app(app)
