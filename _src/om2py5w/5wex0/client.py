@@ -10,13 +10,23 @@ sys.setdefaultencoding('utf-8')
 import requests
 from bs4 import BeautifulSoup
 
-
+HELP = '''
+Input h/help/? for help.
+Input q/quit to quit the process.
+Input r/sync to sync the diary log.
+Input lt/ListTags to list all tags.
+Input st:TAG to set or delete tags
+Input FLUSH to clear all diary entries.
+'''
 
 def get_log():
 	response = requests.get("http://bambooomhelloworld.sinaapp.com/")
 	soup = BeautifulSoup(response.text, "html.parser")
 	tag = soup.textarea
-	print tag.string
+	return tag.string
+
+
+
 #	html_code = response.read()
 #	response.close()
 #	text_area = re.findall(r'<textarea .*>.*</textarea>', html_code, re.DOTALL)
@@ -25,8 +35,9 @@ def get_log():
 	# delete html tags
 #	return log
 
-#def write_log(message):
-#	values = {'newdiary' : message}
+def write_log(message, tags=''):
+	values = {'newdiary':message,'tags':tags}
+	response = requests.post("http://bambooomhelloworld.sinaapp.com/", data=values)
 #	data = urllib.urlencode(values)
 #	req = urllib2.Request("http://localhost:8255/mydiary", data) # post data
 #	response = urllib2.urlopen(req)
@@ -38,6 +49,7 @@ def client():
 	r = ['r','sync']
 	
 	get_log()
+	write_log("aaaa","bbbb")
 
 	#while True:
 	#	message = raw_input(' Input here>')
