@@ -20,22 +20,41 @@ Input st:TAG to set or delete tags
 Input FLUSH to clear all diary entries.
 '''
 
-def get_log():
+def get_log_all():
 	response = requests.get("http://bambooomhelloworld.sinaapp.com/")
 	soup = BeautifulSoup(response.text, "html.parser")
 	tag = soup.textarea
 	return tag.string
 
+def get_log_bytag(tags):
+	response = requests.get("http://bambooomhelloworld.sinaapp.com/")
+	soup = BeautifulSoup(response.text, "html.parser")
+	tag = soup.textarea
+	log = ''
+	if not tag.string:
+		pass
+	else:
+		temp = tag.string.splitlines()
+		for i in range(len(temp)):
+			if temp[i] == ' TAG:'+tags:
+				log += temp[i-1]+'\n'+temp[i+1]+'\n'
+			else:
+				pass
+	return log
+
 def get_tags():
-	diarylog = get_log()
-	tags_all = re.findall(r'TAG:.*?\n',diarylog,re.DOTALL)
-	tags = []
-	for i in tags_all:
-		temp = re.sub(r'TAG:','',i)
-		tags.append(re.sub(r'\n','',temp))
-	tags = list(set(tags))
-	for i in tags:
-		print i
+	diarylog = get_log_all()
+	if not diarylog:
+		pass
+	else:
+		tags_all = re.findall(r'TAG:.*?\n',diarylog,re.DOTALL)
+		tags = []
+		for i in tags_all:
+			temp = re.sub(r'TAG:','',i)
+			tags.append(re.sub(r'\n','',temp))
+		tags = list(set(tags))
+		for i in tags:
+			print i
 
 #	html_code = response.read()
 #	response.close()
@@ -66,7 +85,7 @@ def client():
 		if message in ['h','help','?']:
 			print HELP
 		elif message in ['s','sync']:
-			print get_log()
+			print get_log_bytag(tags)
 		elif message in ['q','quit']:
 			print 'Bye~'
 			break
