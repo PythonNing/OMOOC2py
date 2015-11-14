@@ -22,16 +22,17 @@ def read_diary_all():
 	diarylog = ""
 	for i in kv.get_by_prefix("count"):
 		log.append(i[1]) # i is type tuple with key-value
-		diarylog = diarylog +i[1]['time']+"    "+i[1]['diary']+"\n" 
+		diarylog += "%s\n TAG:%s\n%s\n\n" %(i[1]['time'],i[1]['tag'],i[1]['diary'])
+#		i[1]['time']+"\n"+i[1]['diary']+"\n"+i[1]['tag']+"\n"
 	#for j in range(count-1):
 	#	print log[j]['time'], log[j]['diary']
 	return log, diarylog
 
-def write_diary(newdiary,count=1):
+def write_diary(newdiary,tag,count):
 	# key must be str()
 	countkey = "count" + str(count)
 	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
-	diary = {'time':edit_time, 'diary':newdiary}
+	diary = {'time':edit_time,'diary':newdiary,'tag':tag}
 	kv.set(countkey,diary)
 	count += 1
 
@@ -54,10 +55,10 @@ def start():
 
 @app.route('/', method='POST')
 def input_new():
-	log = read_diary_all()[0]
-	count = len(log)
+	count = len(read_diary_all()[0])
 	newdiary = request.forms.get('newdiary')
-	write_diary(newdiary,count)
+	tag = request.forms.get('tag')
+	write_diary(newdiary,tag,count)
 	diarylog = read_diary_all()[1]
 	return template("diarysae", diarylog=diarylog)
 
