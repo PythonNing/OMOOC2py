@@ -45,7 +45,7 @@ def get_tags():
 	# delete html tags
 #	return log
 
-def write_log(message, tags=''):
+def write_log(message, tags):
 	values = {'newdiary':message,'tags':tags}
 	response = requests.post("http://bambooomhelloworld.sinaapp.com/", data=values)
 #	data = urllib.urlencode(values)
@@ -74,6 +74,8 @@ def client():
 			get_tags()
 		elif message.startswith('st:'):
 			tags = message[3:]
+		else:
+			write_log(message,tags)
 
 
 if __name__ == '__main__':
