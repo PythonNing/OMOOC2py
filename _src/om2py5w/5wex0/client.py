@@ -3,13 +3,20 @@
 '''
 My Diary Web App - CLI for client
 '''  
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 import requests
 from bs4 import BeautifulSoup
 
+
+
 def get_log():
 	response = requests.get("http://bambooomhelloworld.sinaapp.com/")
-	soup = BeautifulSoup(response.text)
-	print soup
+	soup = BeautifulSoup(response.text, "html.parser")
+	tag = soup.textarea
+	print tag.string
 #	html_code = response.read()
 #	response.close()
 #	text_area = re.findall(r'<textarea .*>.*</textarea>', html_code, re.DOTALL)
