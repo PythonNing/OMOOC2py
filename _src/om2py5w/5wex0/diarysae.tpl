@@ -26,7 +26,7 @@
 
     <div align="center">
     吐槽: <input type="text" name="newdiary" size="30"/><br>
-    标签: <input type="text" name="tag" size="30"/><br> 
+    标签: <input type="text" name="tags" size="30"/><br> 
     <input value="Submit" type="submit"/>
     </form><br><br>
     <textarea rows="20" cols="50">{{diarylog}}</textarea>
@@ -34,3 +34,4 @@
 
   </body>
 </html>
+

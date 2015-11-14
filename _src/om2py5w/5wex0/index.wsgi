@@ -15,26 +15,26 @@ from time import localtime, strftime
 app = Bottle()
 kv = sae.kvdb.Client()
 
-def read_diary_all():
-#	diarylog = open('diary log.txt','a+').read()
-#	return f.read()
+def read_diary_all():#	diarylog = open('diary log.txt','a+').read()#	return f.read()
 	log = []
 	diarylog = ""
-	for i in kv.get_by_prefix("count"):
+	for i in list(kv.get_by_prefix("key")):
 		log.append(i[1]) # i is type tuple with key-value
-		diarylog += "%s\n TAG:%s\n%s\n\n" %(i[1]['time'],i[1]['tag'],i[1]['diary'])
-#		i[1]['time']+"\n"+i[1]['diary']+"\n"+i[1]['tag']+"\n"
+		temp = "%s\n TAG:%s\n%s\n\n" %(i[1]['time'],i[1]['tags'],i[1]['diary'])
+		#temp = "%s\n%s\n%s\n" %(i[1]['time'],i[1]['diary'],i[1]['tag'])
+		#temp = i[1]['tags']
+		diarylog = diarylog + temp
+		#i[1]['time']+"\n"+i[1]['diary']+"\n"+i[1]['tag']+"\n"
 	#for j in range(count-1):
 	#	print log[j]['time'], log[j]['diary']
 	return log, diarylog
 
-def write_diary(newdiary,tag,count):
+def write_diary(newdiary,tags,count):
 	# key must be str()
-	countkey = "count" + str(count)
+	countkey = "key" + str(count)
 	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
-	diary = {'time':edit_time,'diary':newdiary,'tag':tag}
+	diary = {'time':edit_time,'diary':newdiary,'tags':tags}
 	kv.set(countkey,diary)
-	count += 1
 
 #	f = open('diary log.txt','a+')
 #	f.write('%s    %s\n' % (edit_time, newdiary))
@@ -57,9 +57,10 @@ def start():
 def input_new():
 	count = len(read_diary_all()[0])
 	newdiary = request.forms.get('newdiary')
-	tag = request.forms.get('tag')
-	write_diary(newdiary,tag,count)
+	tags = request.forms.get('tags')
+	write_diary(newdiary,tags,count)
 	diarylog = read_diary_all()[1]
 	return template("diarysae", diarylog=diarylog)
 
 application = sae.create_wsgi_app(app)
+kv.disconnect_all()
