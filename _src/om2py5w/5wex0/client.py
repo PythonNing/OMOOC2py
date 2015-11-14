@@ -57,9 +57,12 @@ def client():
 
 #	get_log()
 #	write_log("aaaa","bbbb")
+	print HELP 
+	tags=''
 
 	while True:
-		message = raw_input(' Input here>')
+		print 'TAG:'+tags
+		message = raw_input('Input>')
 		if message in ['h','help','?']:
 			print HELP
 		elif message in ['s','sync']:
@@ -69,6 +72,8 @@ def client():
 			break
 		elif message in ['lt','ListTags']:
 			get_tags()
+		elif message.startswith('st:'):
+			tags = message[3:]
 
 
 if __name__ == '__main__':
