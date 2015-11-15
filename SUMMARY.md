@@ -18,6 +18,7 @@
    * [1w_dairy system](task/1wdairy_system.md)
    * [3w_MyDiaryNet](task/3w_mydiarynet.md)
    * [4w_MyDiaryWeb](task/4wdiaryweb.md)
+   * [5w_MyDiarySAE](task/5wdiarysae.md)
 * [基础旋进](1sTry/README.md)
 * [迭代作品](2nDev/README.md)
 * [人生首秀](3rDemo/README.md)
