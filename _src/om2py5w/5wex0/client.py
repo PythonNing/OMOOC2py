@@ -56,6 +56,14 @@ def get_tags():
 		for i in tags:
 			print i
 
+def delete_log():
+	res = raw_input('ARE YOU SURE?(y/n)>')
+	if res.lowercase == 'y':
+		response = requests.delete("http://bambooomhelloworld.sinaapp.com/")
+		print "All clear!Restart!"
+	else:
+		print "Well, keep going on!"
+	
 #	html_code = response.read()
 #	response.close()
 #	text_area = re.findall(r'<textarea .*>.*</textarea>', html_code, re.DOTALL)
@@ -93,6 +101,8 @@ def client():
 			get_tags()
 		elif message.startswith('st:'):
 			tags = message[3:]
+		elif message is 'FLUSH':
+			delete_log()
 		else:
 			write_log(message,tags)
 
