@@ -45,4 +45,10 @@ def input_new():
 	diarylog = read_diary_all()[1]
 	return template("diarysae", diarylog=diarylog)
 
+@app.route('/delete')
+def delete():
+	temp = kv.getkeys_by_prefix("keyy")
+	for i in temp:
+		kv.delete(i)
+
 application = sae.create_wsgi_app(app)

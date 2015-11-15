@@ -19,15 +19,16 @@ Input lt/ListTags to list all tags.
 Input st:TAG to set or delete tags
 Input FLUSH to clear all diary entries.
 '''
+url = "http://bambooomhelloworld.sinaapp.com/"
 
 def get_log_all():
-	response = requests.get("http://bambooomhelloworld.sinaapp.com/")
+	response = requests.get(url)
 	soup = BeautifulSoup(response.text, "html.parser")
 	tag = soup.textarea
 	return tag.string
 
 def get_log_bytag(tags):
-	response = requests.get("http://bambooomhelloworld.sinaapp.com/")
+	response = requests.get(url)
 	soup = BeautifulSoup(response.text, "html.parser")
 	tag = soup.textarea
 	log = ''
@@ -58,32 +59,20 @@ def get_tags():
 
 def delete_log():
 	res = raw_input('ARE YOU SURE?(y/n)>')
-	if res.lowercase == 'y':
-		response = requests.delete("http://bambooomhelloworld.sinaapp.com/")
-		print "All clear!Restart!"
+	if res.lower() == 'y':
+#		response = requests.delete(url)
+		response = requests.get(url+'delete')
+		print "All clear!Restart a new diary!"
 	else:
 		print "Well, keep going on!"
-	
-#	html_code = response.read()
-#	response.close()
-#	text_area = re.findall(r'<textarea .*>.*</textarea>', html_code, re.DOTALL)
-	# re.DOTALL make '.' can also represent newline
-#	log = re.sub(r'<.*?>', '', text_area[0])
-	# delete html tags
-#	return log
 
 def write_log(message, tags):
 	values = {'newdiary':message,'tags':tags}
-	response = requests.post("http://bambooomhelloworld.sinaapp.com/", data=values)
-#	data = urllib.urlencode(values)
-#	req = urllib2.Request("http://localhost:8255/mydiary", data) # post data
-#	response = urllib2.urlopen(req)
-#	response.close()
+	response = requests.post(url, data=values)
+
 
 def client():
 
-#	get_log()
-#	write_log("aaaa","bbbb")
 	print HELP 
 	tags=''
 
@@ -101,7 +90,7 @@ def client():
 			get_tags()
 		elif message.startswith('st:'):
 			tags = message[3:]
-		elif message is 'FLUSH':
+		elif message == 'FLUSH':
 			delete_log()
 		else:
 			write_log(message,tags)

@@ -11,6 +11,11 @@
       font-size: 260%;
       text-align: center;
     }
+    h3 {
+      color:white;
+      font-family: courier;
+      text-align: center;
+    }
     div {
       color: white;
       font-family: courier;
@@ -22,6 +27,9 @@
   
   <body style="background-color:black">
     <h1>Bambooom Diary</h1>
+    <h3>All those moments will be lost in time,<br>
+      like tears in rain.<br>
+      Time to write.</h3>
     <form action="/" method="post">
 
     <div align="center">
