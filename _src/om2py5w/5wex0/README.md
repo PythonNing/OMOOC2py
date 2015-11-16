@@ -16,4 +16,4 @@
 	* 输入```FLUSH```清楚所有日记
 
 效果图
-![](diarysae1.PNG)
+![](diarysae2.PNG)
