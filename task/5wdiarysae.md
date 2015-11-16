@@ -30,6 +30,7 @@ name: helloworld
 version: 1
 ```	
 	* 使用bottle的index.wsgi内容如下:
+
 ```python
 from bottle import Bottle, run
 
@@ -43,8 +44,11 @@ def hello():
 
 application = sae.create_wsgi_app(app)
 ```
+
 * 在本地开发目录下运行测试
+
 ```$ dev_server.py```
+
 * 访问http://localhost:8080就可以访问应用了
 
 ## 2.改写4w代码
@@ -77,6 +81,7 @@ kv=sae.kvdb.Client()
 * 一开始设想是```write_diary(newdiary,count)``` 把count设置为计数用,即可以加在key后作为key值,写进diary更新了database,在函式最后```count +=1 ```后```return count```就可以知道下次写新日记的时候是第几条.以及```read_diary(count)```也可以用个小循环一条条读取diary ([版本记录](https://github.com/bambooom/OMOOC2py/commit/bd8a31c675e86f52db2fe473be22e4b497ab5bd1))
 * 然后想到可以用```kv.get_by_prefix('key')```循环,就不需要count作为```read_diary()```的参数了,仅作为key值的计数即可.
 * 另外```read_diary()```本来设置读取的log是一个list,因为list可以很容易的用```len()```知道有多少条日记,但因为使用bottle的template返回的html需要string的参数,所以同时增加了一个string的log.([版本记录]((https://github.com/bambooom/OMOOC2py/commit/f6aeedafb81bc36edc019cf617d7632bb13b217c))
+* 学习了template里使用循环打印出日记,比较结构化,也就不需要string的log了.
 
 ## 3.增加tag输入
 * 先在template内添加tag的输入框 ```标签: <input type="text" name="tag" size="30"/>```
