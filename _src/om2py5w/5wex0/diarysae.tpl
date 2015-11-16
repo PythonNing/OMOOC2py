@@ -6,9 +6,9 @@
     <meta charset="UTF-8">
     <style>
     h1 {
-      color: white;
+      color: #2F4F4F;
       font-family: courier;
-      font-size: 260%;
+      font-size: 280%;
       text-align: center;
     }
     h3 {
@@ -17,10 +17,18 @@
       text-align: center;
     }
     div {
-      color: white;
+      color: #F92672;
       font-family: courier;
       font-size: 120%;
     }
+    div.readlog {
+      color: #1E90FF;
+      font-family: courier;
+      text-align: center;
+    }
+    i.etime {color: #A6E22E; font-size: 100%}
+    i.tags {color: #A6E22E; font-size: 100%}
+    pre.diary {color:#E6DB74; font-size: 120%}
     </style>
 
   </head>
@@ -36,10 +44,16 @@
     吐槽: <input type="text" name="newdiary" size="30"/><br>
     标签: <input type="text" name="tags" size="30"/><br> 
     <input value="Submit" type="submit"/>
-    </form><br><br>
-    <textarea rows="20" cols="50">{{diarylog}}</textarea>
     </div>
-
+    </form><br>
+    %import time
+    %for i in diarylog:
+      <div class=readlog>
+        <i class=etime>{{i['time']}}</i>
+        <i class=tags>TAG: {{i['tags']}}</i>
+        <pre class=diary>{{i['diary']}}</pre>
+      </div>
+    %end
   </body>
 </html>
 

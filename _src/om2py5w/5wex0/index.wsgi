@@ -6,6 +6,9 @@ MyDiary Web Application
 Open web browser and access http://bambooomhelloworld.sinaapp.com/
 You can read the old diary and input new diary
 '''
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 from bottle import Bottle, request, route, run, template
 import sae
@@ -17,37 +20,34 @@ kv = sae.kvdb.Client()
 
 def read_diary_all():
 	log = []
-	diarylog = ""
-	for i in list(kv.get_by_prefix("key")):
+	for i in list(kv.get_by_prefix("key#")):
 		log.append(i[1])
-		temp = "%s\n TAG:%s\n%s\n\n" %(i[1]['time'],i[1]['tags'],i[1]['diary'])
-		diarylog = diarylog + temp
-	return log, diarylog
+	return log
 
 def write_diary(newdiary,tags,count):
 	# key must be str()
-	countkey = "key" + str(count)
+	countkey = "key#" + str(count)
 	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
 	diary = {'time':edit_time,'diary':newdiary,'tags':tags}
 	kv.set(countkey,diary)
 
 @app.route('/')
 def start():
-	diarylog = read_diary_all()[1]
+	diarylog = read_diary_all()
 	return template("diarysae", diarylog=diarylog)
 
 @app.route('/', method='POST')
 def input_new():
-	count = len(read_diary_all()[0])
-	newdiary = request.forms.get('newdiary')
-	tags = request.forms.get('tags')
+	count = len(read_diary_all())
+	newdiary = unicode(request.forms.get('newdiary'),'utf-8')
+	tags = unicode(request.forms.get('tags'),'utf-8')
 	write_diary(newdiary,tags,count)
-	diarylog = read_diary_all()[1]
+	diarylog = read_diary_all()
 	return template("diarysae", diarylog=diarylog)
 
-@app.route('/delete')
+@app.route('/', method='DELETE')
 def delete():
-	temp = kv.getkeys_by_prefix("keyy")
+	temp = kv.getkeys_by_prefix("key#")
 	for i in temp:
 		kv.delete(i)
 

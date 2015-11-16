@@ -60,8 +60,8 @@ def get_tags():
 def delete_log():
 	res = raw_input('ARE YOU SURE?(y/n)>')
 	if res.lower() == 'y':
-#		response = requests.delete(url)
-		response = requests.get(url+'delete')
+		response = requests.delete(url)
+#		response = requests.get(url+'delete')
 		print "All clear!Restart a new diary!"
 	else:
 		print "Well, keep going on!"
