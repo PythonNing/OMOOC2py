@@ -24,44 +24,35 @@ url = "http://bambooomhelloworld.sinaapp.com/"
 def get_log_all():
 	response = requests.get(url)
 	soup = BeautifulSoup(response.text, "html.parser")
-	tag = soup.textarea
-	return tag.string
-
-def get_log_bytag(tags):
-	response = requests.get(url)
-	soup = BeautifulSoup(response.text, "html.parser")
-	tag = soup.textarea
 	log = ''
-	if not tag.string:
-		pass
-	else:
-		temp = tag.string.splitlines()
-		for i in range(len(temp)):
-			if temp[i] == ' TAG:'+tags:
-				log += temp[i-1]+'\n'+temp[i+1]+'\n'
-			else:
-				pass
+	for i in soup.find_all('pre'):
+		log += i.get_text()+'\n'
 	return log
 
+def get_log_bytag(tags):
+	response = requests.get("http://bambooomhelloworld.sinaapp.com/")
+	soup = BeautifulSoup(response.text,"html.parser")
+	ti=list(soup.find_all('i', class_='etime'))
+	ta=list(soup.find_all('i', class_='tags'))
+	di=list(soup.find_all('pre',class_='diary'))
+	for i in range(len(list(ti))):
+		if ta[i].get_text() == 'TAG: '+tags:
+			print "%s  %s" %(ti[i].get_text(),di[i].get_text())
+
 def get_tags():
-	diarylog = get_log_all()
-	if not diarylog:
-		pass
-	else:
-		tags_all = re.findall(r'TAG:.*?\n',diarylog,re.DOTALL)
-		tags = []
-		for i in tags_all:
-			temp = re.sub(r'TAG:','',i)
-			tags.append(re.sub(r'\n','',temp))
-		tags = list(set(tags))
-		for i in tags:
-			print i
+	response = requests.get(url)
+	soup = BeautifulSoup(response.text, "html.parser")
+	temp =[]
+	for i in soup.find_all('i', class_='tags'):
+		temp.append(i.get_text())
+	tag_set = list(set(temp))
+	for i in tag_set:
+		print i
 
 def delete_log():
 	res = raw_input('ARE YOU SURE?(y/n)>')
 	if res.lower() == 'y':
 		response = requests.delete(url)
-#		response = requests.get(url+'delete')
 		print "All clear!Restart a new diary!"
 	else:
 		print "Well, keep going on!"
@@ -82,7 +73,7 @@ def client():
 		if message in ['h','help','?']:
 			print HELP
 		elif message in ['s','sync']:
-			print get_log_bytag(tags)
+			get_log_bytag(tags)
 		elif message in ['q','quit']:
 			print 'Bye~'
 			break
