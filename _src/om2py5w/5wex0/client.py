@@ -36,7 +36,7 @@ def get_log_bytag(tags):
 	ta=list(soup.find_all('i', class_='tags'))
 	di=list(soup.find_all('pre',class_='diary'))
 	for i in range(len(list(ti))):
-		if ta[i].get_text() == 'TAG: '+tags:
+		if ta[i].get_text() == 'TAG:'+tags:
 			print "%s  %s" %(ti[i].get_text(),di[i].get_text())
 
 def get_tags():

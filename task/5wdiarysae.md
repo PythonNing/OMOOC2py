@@ -108,7 +108,7 @@ $ git push sae master:1
 * 上周发现有同学用了这两个包之后,代码非常直接也很简洁.```requests```大妈演示时也讲过了,HTTP for human.比python标准库内的```urllib```和```urllib2```好用
 	* ```r=requests.get(url)```访问网站,返回一个类似file object,```r.text```就可以得到html/css源码
 	* ```BeautifulSoup```是一个解析html/xml之类的解析器,可以通过它很方便提取html内的相关信息
-* 改写```get_log()```获取所有历史数据 [版本记录](https://github.com/bambooom/OMOOC2py/commit/c0b3f83f74ea0b4decdab70d9eb762700c82af8f) 
+* ~~改写```get_log()```获取所有历史数据 [版本记录](https://github.com/bambooom/OMOOC2py/commit/c0b3f83f74ea0b4decdab70d9eb762700c82af8f)~~
 ```python
 def get_log():
 	response = requests.get("http://bambooomhelloworld.sinaapp.com/")
@@ -117,20 +117,40 @@ def get_log():
 	print tag.string # 需要转化成string
 	# 若直接print temp,会连带html的<textarea>的tag一起打印出来
 ```
-* 改写```write_log()```提交表单,用```requests.post```就很简单了 [版本记录](https://github.com/bambooom/OMOOC2py/commit/cc160b68ad5edf766f5adb193b0e2f3c397cb6a7)
+* ~~改写```write_log()```提交表单,用```requests.post```就很简单了 [版本记录](https://github.com/bambooom/OMOOC2py/commit/cc160b68ad5edf766f5adb193b0e2f3c397cb6a7)~~
+* 因为自己的做法太蠢了,重新学习了template使用循环将日记打印出来,所以CLI的function全部需要修改.
 
 ## 6.添加ListTags和st:<TAG>功能
 * 添加```get_tags()```函式获取所有的标签tags [版本记录](https://github.com/bambooom/OMOOC2py/commit/279dca9c32d1498a80253643a67ebff4313f408f)
-	* 从```get_log()```获取历史记录后用正则表达中的```re.findall```找出所有的**TAG:<>**,返回一个list
-	* 用```re.sub```去掉所有的前缀**TAG:**
+	* ~~从```get_log()```获取历史记录后用正则表达中的```re.findall```找出所有的**TAG:<>**,返回一个list~~
+	* ~~用```re.sub```去掉所有的前缀**TAG:**~~
+	* 使用```soup```的```find_all()```可以将指定html tag下的内容解析出来
+	```python
+	temp =[]
+	for i in soup.find_all('i', class_='tags'):
+		temp.append(i.get_text())
+	```
 	* 获得一个每条日记的tags的list,里面会有重复的tags
-	* ```tags = list(set(tags))``` set()可以理解为数学的集合概念,所以去掉了duplicate,最后返回的```tags```就是所有不同的标签的列表.
+	* ```tags = list(set(temp))``` set()可以理解为数学的集合概念,所以去掉了duplicate,最后返回的```tags```就是所有不同的标签的列表.
 * 添加st:<TAG>输入判定,还是从小赖同学处学到用```str.startswith('st:')```来判定
 
 ## 7.添加打印某一tag下所有日记功能 ```get_log_bytag(tags)```
-* 前面与从网页获取所有日志一样,获得日记string
-* 因为我写入日记的时候设计的是一行时间,一行TAG,一行日记,所以现在对这个string我就用```splitlines()```分行,返回了一个list
-* 用循环去判定每个tag是否为需要的提取的tag,是的话就将此tag的前后日期及日记提取出来
-* 如果还没有任何历史记录也没有tag时,网页获取的string为```None Type```,不能进行string的操作,系统会报错.后面加入判定如果为空就pass [版本记录](https://github.com/bambooom/OMOOC2py/commit/940b3922f523ae099f8a9024f1f87dd11bef8728)
+* ~~前面与从网页获取所有日志一样,获得日记string~~
+* ~~因为我写入日记的时候设计的是一行时间,一行TAG,一行日记,所以现在对这个string我就用```splitlines()```分行,返回了一个list~~
+* ~~用循环去判定每个tag是否为需要的提取的tag,是的话就将此tag的前后日期及日记提取出来~~
+* ~~如果还没有任何历史记录也没有tag时,网页获取的string为```None Type```,不能进行string的操作,系统会报错.后面加入判定如果为空就pass [版本记录](https://github.com/bambooom/OMOOC2py/commit/940b3922f523ae099f8a9024f1f87dd11bef8728)~~
+* 还是一样使用```soup.find_all()```获取特定tag下的内容
+* 因为每一个diary的时间标签内容都是成组出现,所以只要判定标签为所需要标签,即可提取
+此tag下所有日记
 
 ## 8.添加FLUSH功能删除所有日记
+* 用到```requests.delete```,其实就是http协议中的DELETE去删除资源
+* 需要也在```index.wsgi```中加上定义route的```method='DELETE'```
+* 具体删除日记也就是在database中删除数据,在kvdb中删除所有key值即可
+* 看了文档之后发现可以使用```kv.getkeys_by_prefix()```返回的就是key值的list,再用kv.delete()```删除即可删除记录.
+
+## 9.未做事项
+- [ ] 日记排序问题
+- [ ] 网站访问记录
+- [ ] 认证登录?
+- [ ] 页面美化?
