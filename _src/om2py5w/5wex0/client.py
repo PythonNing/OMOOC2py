@@ -19,7 +19,7 @@ Input lt/ListTags to list all tags.
 Input st:TAG to set or delete tags
 Input FLUSH to clear all diary entries.
 '''
-url = "http://bambooomhelloworld.sinaapp.com/"
+url = "http://bambooomdiary.sinaapp.com/"
 
 def get_log_all():
 	response = requests.get(url)
