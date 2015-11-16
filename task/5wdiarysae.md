@@ -52,12 +52,13 @@ application = sae.create_wsgi_app(app)
 
 * [kvdb文档](http://www.sinacloud.com/doc/sae/python/kvdb.html)
 * kvdb类似python的dict data type
+
 ```python
 import sae
 import sae.kvdb
-
-kv=sae.kvdb.Client() # 创建kv实例
+kv=sae.kvdb.Client()
 ```
+
 * 参考小赖的设计:
 	* key值为key1,key2,key3....即有几条日记就是key#
 		* key值必须为string
