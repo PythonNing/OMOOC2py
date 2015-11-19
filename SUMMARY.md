@@ -14,6 +14,7 @@
    * [2wd4](notes/2wd4.md)
    * [3wd4](notes/3wd4.md)
    * [4wd4](notes/4wd4.md)
+   * [5wd0 C2T2](notes/5wd0_ShenZhen_C2T2.md)
 * [Hacking to the Gate](hacking_to_the_gate.md)
    * [1w_dairy system](task/1wdairy_system.md)
    * [3w_MyDiaryNet](task/3w_mydiarynet.md)
