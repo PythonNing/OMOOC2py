@@ -21,7 +21,7 @@ import xml.etree.ElementTree as ET
 app = Bottle()
 kv = sae.kvdb.Client()
 
-@app.route('/wechat')
+#@app.route('/wechat')
 def check_signature():
 	'''
 	wechat access verification
@@ -39,15 +39,16 @@ def check_signature():
 	else:
 		return None
 
-def parse_xml_msg(recv_xml):
-	#recv_xml = request.body.read()
+def parse_xml_msg():
+	recv_xml = request.body.read()
 	root = ET.fromstring(recv_xml)
 	msg = {}
 	for child in root:
 		msg[child.tag] = child.text
 	return msg
 
-recv_xml='''
+'''
+server receiving data
 <xml>
  <ToUserName><![CDATA[bambooom]]></ToUserName>
  <FromUserName><![CDATA[omoocpy]]></FromUserName> 
@@ -58,7 +59,17 @@ recv_xml='''
  </xml>
  '''
 
-print type(parse_xml_msg(recv_xml))
+'''
+server sending data
+<xml>
+<ToUserName><![CDATA[toUser]]></ToUserName>
+<FromUserName><![CDATA[fromUser]]></FromUserName>
+<CreateTime>12345678</CreateTime>
+<MsgType><![CDATA[text]]></MsgType>
+<Content><![CDATA[你好]]></Content>
+</xml>
+'''
+#print type(parse_xml_msg(recv_xml))
 
 
 def read_diary_all():
@@ -67,31 +78,70 @@ def read_diary_all():
 		log.append(i[1])
 	return log
 
-def write_diary(newdiary,tags,count):
+def write_diary(newdiary,count):
 	# key must be str()
 	countkey = "key#" + str(count)
 	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
-	diary = {'time':edit_time,'diary':newdiary,'tags':tags}
+	diary = {'time':edit_time,'diary':newdiary}
 	kv.set(countkey,diary)
 
+#@app.route('/')
+#def start():
+#	diarylog = read_diary_all()
+#	return template("diarysae", diarylog=diarylog)
+
 @app.route('/')
-def start():
-	diarylog = read_diary_all()
-	return template("diarysae", diarylog=diarylog)
+def response_wechat():
+	'''
+	response in wechat platform
+	'''
+	#msg = parse_xml_msg()
+	msg={'FromUserName': 'omoocpy', 'MsgId': 'hdsicwecewew2233333', 
+	'ToUserName': 'bambooom', 'Content': 'diary WTF', 'MsgType': 'text', 
+	'CreateTime': '20151120'}
 
-@app.route('/', method='POST')
-def input_new():
-	count = len(read_diary_all())
-	newdiary = unicode(request.forms.get('newdiary'),'utf-8')
-	tags = unicode(request.forms.get('tags'),'utf-8')
-	write_diary(newdiary,tags,count)
-	diarylog = read_diary_all()
-	return template("diarysae", diarylog=diarylog)
+	response_msg = '''
+	<xml>
+	<ToUserName><![CDATA[%s]]></ToUserName>
+	<FromUserName><![CDATA[%s]]></FromUserName>
+	<CreateTime>%s</CreateTime>
+	<MsgType><![CDATA[text]]></MsgType>
+	<Content><![CDATA[%s]]></Content>
+	</xml>
+	'''
+	HELP = '''
+	目前可使用的姿势:
+	diary ~吐了个槽
+	see   ~吐过的槽
+	help  ~怎么吐槽
 
-@app.route('/', method='DELETE')
-def delete():
-	temp = kv.getkeys_by_prefix("key#")
-	for i in temp:
-		kv.delete(i)
+	'''
+	if msg['Content'].startswith('diary'):
+		newdiary = msg['Content'][5:]
+		count = len(read_diary_all())
+		write_diary(newdiary,count)
+		echo_msg = response_msg % (
+			msg['FromUserName'],msg['ToUserName'],strftime("%Y %b %d", localtime()),
+			u"Got!"+str(count+1)+u"条吐槽啦!")
+	#elif msg['Content'] == 'see'
 
-#application = sae.create_wsgi_app(app)
+	#	echo_msg = response_msg % (
+	#		msg['FromUserName'],msg['ToUserName'],str(int(time.time())),HELP)
+	return echo_msg
+
+
+
+	#count = len(read_diary_all())
+	#newdiary = unicode(request.forms.get('newdiary'),'utf-8')
+	#tags = unicode(request.forms.get('tags'),'utf-8')
+	#write_diary(newdiary,tags,count)
+	#diarylog = read_diary_all()
+	#return template("diarysae", diarylog=diarylog)
+
+#@app.route('/', method='DELETE')
+#def delete():
+#	temp = kv.getkeys_by_prefix("key#")
+#	for i in temp:
+#		kv.delete(i)
+
+application = sae.create_wsgi_app(app)
