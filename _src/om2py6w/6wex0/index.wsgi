@@ -18,6 +18,9 @@ import hashlib
 import urllib2
 import xml.etree.ElementTree as ET
 
+app = Bottle()
+kv = sae.kvdb.Client()
+
 @app.route('/wechat')
 def check_signature():
 	'''
@@ -36,8 +39,26 @@ def check_signature():
 	else:
 		return None
 
-app = Bottle()
-kv = sae.kvdb.Client()
+def parse_xml_msg(recv_xml):
+	#recv_xml = request.body.read()
+	root = ET.fromstring(recv_xml)
+	for child in root:
+		print child.tag
+		print child.text
+
+recv_xml = '''
+<xml>
+ <ToUserName><![CDATA[bambooom]]></ToUserName>
+ <FromUserName><![CDATA[omoocpy]]></FromUserName> 
+ <CreateTime>20151120</CreateTime>
+ <MsgType><![CDATA[text]]></MsgType>
+ <Content><![CDATA[WTF]]></Content>
+ <MsgId>hdsicwecewew2233333</MsgId>
+ </xml>
+ '''
+
+parse_xml_msg(recv_xml)
+
 
 def read_diary_all():
 	log = []
@@ -72,4 +93,4 @@ def delete():
 	for i in temp:
 		kv.delete(i)
 
-application = sae.create_wsgi_app(app)
+#application = sae.create_wsgi_app(app)
