@@ -42,11 +42,12 @@ def check_signature():
 def parse_xml_msg(recv_xml):
 	#recv_xml = request.body.read()
 	root = ET.fromstring(recv_xml)
+	msg = {}
 	for child in root:
-		print child.tag
-		print child.text
+		msg[child.tag] = child.text
+	return msg
 
-recv_xml = '''
+recv_xml='''
 <xml>
  <ToUserName><![CDATA[bambooom]]></ToUserName>
  <FromUserName><![CDATA[omoocpy]]></FromUserName> 
@@ -57,7 +58,7 @@ recv_xml = '''
  </xml>
  '''
 
-parse_xml_msg(recv_xml)
+print type(parse_xml_msg(recv_xml))
 
 
 def read_diary_all():
