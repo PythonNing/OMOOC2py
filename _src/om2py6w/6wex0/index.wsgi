@@ -53,7 +53,7 @@ def read_diary_all():
 	return log,logstr
 
 def read_diary_tags(tags):
-	log = [i[1]['diary'] for i in list(kv.get_by_prefix("key")) if tags in i[1]['tags']]
+	log = [i[1]['diary'] for i in list(kv.get_by_prefix("key*")) if tags in i[1]['tags']]
 	return "\n".join(log)
 
 def write_diary(raw_diary):
@@ -121,6 +121,7 @@ def response_wechat():
 		echo_str = read_diary_all()[1]
 	elif msg['Content'].replace(" ","").startswith('see#'):
 		tags = msg['Content'].replace(" ","")[4:]
+		tags = tags if tags else "NULL"
 		echo_str = read_diary_tags(tags)
 	else:
 		echo_str = HELP
@@ -133,7 +134,7 @@ def response_wechat():
 
 @app.route('/', method='DELETE')
 def delete():
-	temp = kv.getkeys_by_prefix("key#")
+	temp = kv.getkeys_by_prefix("key*")
 	for i in temp:
 		kv.delete(i)
 
