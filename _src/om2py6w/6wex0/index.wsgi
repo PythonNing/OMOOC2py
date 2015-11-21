@@ -48,7 +48,7 @@ def parse_xml_msg():
 	return msg
 
 def read_diary_all():
-	log = [i[1]['diary'] for i in list(kv.get_by_prefix("key"))]
+	log = [i[1]['diary'] for i in list(kv.get_by_prefix("key*"))]
 	logstr = "\n".join(log)
 	return log,logstr
 
@@ -66,10 +66,10 @@ def write_diary(raw_diary):
 		tags = withtag_diary[1:]
 	# key must be str()
 	count = len(read_diary_all()[0])
-	countkey = "key" + str(count)
+	countkey = "key*" + str(count)
 	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
 	diary = {'time':edit_time,'diary':newdiary,'tags':tags}
-	kv.set(countkey,newdiary)
+	kv.set(countkey,diary)
 
 @app.route('/')
 def start():
@@ -115,10 +115,11 @@ def response_wechat():
 	if msg['Content'].startswith('diary..'):
 		raw_diary = msg['Content'][7:]
 		write_diary(raw_diary)
-		echo_str = u"Got! "+str(count+1)+u"条吐槽啦!"
+		count = len(read_diary_all()[0])
+		echo_str = u"Got! "+str(count)+u"条吐槽啦!"
 	elif msg['Content'] == 'see':
 		echo_str = read_diary_all()[1]
-	elif msg['Content'].startswith('see#'):
+	elif msg['Content'].replace(" ","").startswith('see#'):
 		tags = msg['Content'][4:]
 		#echo_str = read_diary_tags(tags)
 	else:
