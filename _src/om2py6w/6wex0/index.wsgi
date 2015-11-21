@@ -52,9 +52,9 @@ def read_diary_all():
 	logstr = "\n".join(log)
 	return log,logstr
 
-#def read_diary_tags(tags):
-#	for i in list(kv.get_by_prefix("key")):
-#		if tags in i[1]['tags']
+def read_diary_tags(tags):
+	log = [i[1]['diary'] for i in list(kv.get_by_prefix("key")) if tags in i[1]['tags']]
+	return "\n".join(log)
 
 def write_diary(raw_diary):
 	raw_diary = raw_diary.replace(" ","") #delete all whitespace
@@ -120,8 +120,8 @@ def response_wechat():
 	elif msg['Content'] == 'see':
 		echo_str = read_diary_all()[1]
 	elif msg['Content'].replace(" ","").startswith('see#'):
-		tags = msg['Content'][4:]
-		#echo_str = read_diary_tags(tags)
+		tags = msg['Content'].replace(" ","")[4:]
+		echo_str = read_diary_tags(tags)
 	else:
 		echo_str = HELP
 		
@@ -130,14 +130,6 @@ def response_wechat():
 	
 	return echo_msg
 
-
-
-	#count = len(read_diary_all())
-	#newdiary = unicode(request.forms.get('newdiary'),'utf-8')
-	#tags = unicode(request.forms.get('tags'),'utf-8')
-	#write_diary(newdiary,tags,count)
-	#diarylog = read_diary_all()
-	#return template("diarysae", diarylog=diarylog)
 
 @app.route('/', method='DELETE')
 def delete():
