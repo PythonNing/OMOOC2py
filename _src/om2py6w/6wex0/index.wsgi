@@ -2,26 +2,26 @@
 #!/usr/bin/env python
 # author: bambooom
 '''
-MyDiary Web Application
+MyDiary Wechat Application
 Open web browser and access http://omoocpy.sinaapp.com/
-You can read the old diary and input new diary
+Wechat platform: bambooom
 '''
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-from bottle import Bottle, request, route, run, template
+from bottle import Bottle, request, route, run
 import sae
 import sae.kvdb
+import time
 from time import localtime, strftime
 import hashlib
-import urllib2
 import xml.etree.ElementTree as ET
 
 app = Bottle()
 kv = sae.kvdb.Client()
 
-#@app.route('/wechat')
+@app.route('/wechat')
 def check_signature():
 	'''
 	wechat access verification
@@ -47,58 +47,32 @@ def parse_xml_msg():
 		msg[child.tag] = child.text
 	return msg
 
-'''
-server receiving data
-<xml>
- <ToUserName><![CDATA[bambooom]]></ToUserName>
- <FromUserName><![CDATA[omoocpy]]></FromUserName> 
- <CreateTime>20151120</CreateTime>
- <MsgType><![CDATA[text]]></MsgType>
- <Content><![CDATA[WTF]]></Content>
- <MsgId>hdsicwecewew2233333</MsgId>
- </xml>
- '''
-
-'''
-server sending data
-<xml>
-<ToUserName><![CDATA[toUser]]></ToUserName>
-<FromUserName><![CDATA[fromUser]]></FromUserName>
-<CreateTime>12345678</CreateTime>
-<MsgType><![CDATA[text]]></MsgType>
-<Content><![CDATA[你好]]></Content>
-</xml>
-'''
-#print type(parse_xml_msg(recv_xml))
-
-
 def read_diary_all():
-	log = []
-	for i in list(kv.get_by_prefix("key#")):
-		log.append(i[1])
-	return log
+	log = [i[1]['diary'] for i in list(kv.get_by_prefix("key"))]
+	logstr = "\n".join(log)
+	return log,logstr
 
-def write_diary(newdiary,count):
+def write_diary(newdiary,tags,count):
 	# key must be str()
-	countkey = "key#" + str(count)
+	countkey = "key" + str(count)
 	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
-	diary = {'time':edit_time,'diary':newdiary}
-	kv.set(countkey,diary)
-
-#@app.route('/')
-#def start():
-#	diarylog = read_diary_all()
-#	return template("diarysae", diarylog=diarylog)
+	diary = {'time':edit_time,'diary':newdiary,'tags':tags}
+	kv.set(countkey,newdiary)
 
 @app.route('/')
+def start():
+	diarylog = read_diary_all()[0]
+	return template("diarysae", diarylog=diarylog)
+
+@app.route('/wechat', method = 'POST')
 def response_wechat():
 	'''
 	response in wechat platform
 	'''
-	#msg = parse_xml_msg()
-	msg={'FromUserName': 'omoocpy', 'MsgId': 'hdsicwecewew2233333', 
-	'ToUserName': 'bambooom', 'Content': 'diary WTF', 'MsgType': 'text', 
-	'CreateTime': '20151120'}
+	msg = parse_xml_msg()
+	#msg={'FromUserName': 'omoocpy', 'MsgId': 'hdsicwecewew2233333', 
+	#'ToUserName': 'bambooom', 'Content': 'diary WTF', 'MsgType': 'text', 
+	#'CreateTime': '20151120'}
 
 	response_msg = '''
 	<xml>
@@ -111,22 +85,30 @@ def response_wechat():
 	'''
 	HELP = '''
 	目前可使用的姿势:
-	diary ~吐了个槽
-	see   ~吐过的槽
-	help  ~怎么吐槽
-
+	- diary..# ~吐槽贴个#标签
+	    - 例如"diary..cool#nice"
+	    - cool为吐槽,nice为标签
+	- see    ~吐过的槽
+	- see#  ~吐过#标签的槽
+	    - 例如"see#nice"
+	    - 返回"cool"
+	- help  ~怎么吐槽
+	    - 返回姿势指南
 	'''
+
 	if msg['Content'].startswith('diary'):
 		newdiary = msg['Content'][5:]
-		count = len(read_diary_all())
+		count = len(read_diary_all()[0])
 		write_diary(newdiary,count)
-		echo_msg = response_msg % (
-			msg['FromUserName'],msg['ToUserName'],strftime("%Y %b %d", localtime()),
-			u"Got!"+str(count+1)+u"条吐槽啦!")
-	#elif msg['Content'] == 'see'
-
-	#	echo_msg = response_msg % (
-	#		msg['FromUserName'],msg['ToUserName'],str(int(time.time())),HELP)
+		echo_str = u"Got! "+str(count+1)+u"条吐槽啦!"
+	elif msg['Content'] == 'see':
+		echo_str = read_diary_all()[1]
+	else:
+		echo_str = HELP
+		
+	echo_msg = response_msg % (
+		msg['FromUserName'],msg['ToUserName'],str(int(time.time())),echo_str)
+	
 	return echo_msg
 
 
@@ -138,10 +120,10 @@ def response_wechat():
 	#diarylog = read_diary_all()
 	#return template("diarysae", diarylog=diarylog)
 
-#@app.route('/', method='DELETE')
-#def delete():
-#	temp = kv.getkeys_by_prefix("key#")
-#	for i in temp:
-#		kv.delete(i)
+@app.route('/', method='DELETE')
+def delete():
+	temp = kv.getkeys_by_prefix("key#")
+	for i in temp:
+		kv.delete(i)
 
 application = sae.create_wsgi_app(app)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*- 
 # author: bambooom
 '''
-My Diary Web App - CLI for client
+My Diary Wechat App - CLI
 '''  
 import sys
 reload(sys)
@@ -19,7 +19,7 @@ Input lt/ListTags to list all tags.
 Input st:TAG to set or delete tags
 Input FLUSH to clear all diary entries.
 '''
-url = "http://bambooomdiary.sinaapp.com/"
+url = "http://ommocpy.sinaapp.com/"
 
 def get_log_all():
 	response = requests.get(url)
