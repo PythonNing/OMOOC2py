@@ -52,8 +52,20 @@ def read_diary_all():
 	logstr = "\n".join(log)
 	return log,logstr
 
-def write_diary(newdiary,tags,count):
+#def read_diary_tags(tags):
+#	for i in list(kv.get_by_prefix("key")):
+#		if tags in i[1]['tags']
+
+def write_diary(raw_diary):
+	raw_diary = raw_diary.replace(" ","") #delete all whitespace
+	withtag_diary = raw_diary.split('#') #split diary and tags by #
+	newdiary = withtag_diary[0]
+	if len(withtag_diary) == 1:
+		tags = ["NULL"]
+	else:
+		tags = withtag_diary[1:]
 	# key must be str()
+	count = len(read_diary_all()[0])
 	countkey = "key" + str(count)
 	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
 	diary = {'time':edit_time,'diary':newdiary,'tags':tags}
@@ -88,21 +100,27 @@ def response_wechat():
 	- diary..# ~吐槽贴个#标签
 	    - 例如"diary..cool#nice"
 	    - cool为吐槽,nice为标签
+	    - 标签数可>=1
+	    - 例如"diary..a#b#c#d"
+	    - a为吐槽,b/c/d为标签
 	- see    ~吐过的槽
 	- see#  ~吐过#标签的槽
 	    - 例如"see#nice"
 	    - 返回"cool"
+	    - 一次只能看一个标签喔
 	- help  ~怎么吐槽
 	    - 返回姿势指南
 	'''
 
-	if msg['Content'].startswith('diary'):
-		newdiary = msg['Content'][5:]
-		count = len(read_diary_all()[0])
-		write_diary(newdiary,count)
+	if msg['Content'].startswith('diary..'):
+		raw_diary = msg['Content'][7:]
+		write_diary(raw_diary)
 		echo_str = u"Got! "+str(count+1)+u"条吐槽啦!"
 	elif msg['Content'] == 'see':
 		echo_str = read_diary_all()[1]
+	elif msg['Content'].startswith('see#'):
+		tags = msg['Content'][4:]
+		#echo_str = read_diary_tags(tags)
 	else:
 		echo_str = HELP
 		
