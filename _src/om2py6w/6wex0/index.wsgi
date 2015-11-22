@@ -60,11 +60,11 @@ def read_diary_all():
 def read_diary_tags(tags):
 	temp1 = [i[1] for i in list(kv.get_by_prefix("key@")) if tags in i[1]['tags']]
 	temp2 = sorted(temp1, key = lambda x:x['time'])
-	log = [temp[i]['diary'] for i in range(len(temp2))]
+	log = [temp2[i]['diary'] for i in range(len(temp2))]
 	return "\n".join(log)
 
 def write_diary_wechat(raw_diary):
-	raw_diary = raw_diary.replace(" ","") #delete all whitespace
+	#raw_diary = raw_diary.replace(" ","") #delete all whitespace
 	withtag_diary = raw_diary.split('#') #split diary and tags by #
 	newdiary = withtag_diary[0]
 	if len(withtag_diary) == 1:
@@ -94,8 +94,8 @@ def start():
 @app.route('/', method='POST')
 def input_new():
 	count = len(read_diary_all()[0])
-	newdiary = unicode(request.forms.get('newdiary'),'utf-8')
-	tags = unicode(request.forms.get('tags'),'utf-8')
+	newdiary = request.forms.get('newdiary')
+	tags = request.forms.get('tags')
 	write_diary_web(newdiary,tags,count)
 	diarylog = read_diary_all()[2]
 	return template("diarysae", diarylog=diarylog)

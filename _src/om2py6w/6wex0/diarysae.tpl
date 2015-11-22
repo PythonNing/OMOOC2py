@@ -50,7 +50,7 @@
     %for i in diarylog:
       <div class=readlog>
         <i class=etime>{{i['time']}}</i>
-        <i class=tags>TAG:{{i['tags']}}</i>
+        <i class=tags>TAG:{{" ".join(i['tags'])}}</i>
         <pre class=diary>{{i['diary']}}</pre>
       </div>
     %end
