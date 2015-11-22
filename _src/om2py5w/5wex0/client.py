@@ -30,7 +30,7 @@ def get_log_all():
 	return log
 
 def get_log_bytag(tags):
-	response = requests.get("http://bambooomhelloworld.sinaapp.com/")
+	response = requests.get(url)
 	soup = BeautifulSoup(response.text,"html.parser")
 	ti=list(soup.find_all('i', class_='etime'))
 	ta=list(soup.find_all('i', class_='tags'))
