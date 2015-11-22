@@ -142,6 +142,12 @@ def response_wechat():
 	    - 返回姿势指南
 	'''
 
+	if msg['Event'] == 'subscribe':
+		echo_str = HELP
+		echo_msg = response_msg % (
+			msg['FromUserName'],msg['ToUserName'],str(int(time.time())),echo_str)
+		return echo_msg
+
 	if msg['Content'].startswith('d='):
 		raw_diary = msg['Content'][2:]
 		write_diary_wechat(raw_diary)

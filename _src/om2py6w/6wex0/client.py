@@ -100,6 +100,7 @@ def client():
 			get_tags()
 		elif message.startswith('st:'):
 			tags = message[3:]
+			tags = tags if tags else 'NULL'
 		elif message == 'FLUSH':
 			delete_log()
 		elif message.lower() in ['e:?','e:h','e:help']:
