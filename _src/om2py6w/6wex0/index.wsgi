@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 # author: bambooom
+# email: nmz89825@gmail.com
+
 '''
 MyDiary Wechat Application
-Open web browser and access http://omoocpy.sinaapp.com/
+Web access: http://omoocpy.sinaapp.com/
 Wechat platform: bambooom
 '''
+
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-from bottle import Bottle, request, route, run
+from bottle import Bottle, request, route, run,template
 import sae
 import sae.kvdb
 import time
@@ -48,33 +51,60 @@ def parse_xml_msg():
 	return msg
 
 def read_diary_all():
-	log = [i[1]['diary'] for i in list(kv.get_by_prefix("key*"))]
+	temp1 = [i[1] for i in list(kv.get_by_prefix("key@"))]
+	temp2 = sorted(temp1, key = lambda x:x['time'])
+	log = [temp2[i]['diary'] for i in range(len(temp2))]
 	logstr = "\n".join(log)
-	return log,logstr
+	return log,logstr,temp2
 
 def read_diary_tags(tags):
-	log = [i[1]['diary'] for i in list(kv.get_by_prefix("key*")) if tags in i[1]['tags']]
+	temp1 = [i[1] for i in list(kv.get_by_prefix("key@")) if tags in i[1]['tags']]
+	temp2 = sorted(temp1, key = lambda x:x['time'])
+	log = [temp[i]['diary'] for i in range(len(temp2))]
 	return "\n".join(log)
 
-def write_diary(raw_diary):
+def write_diary_wechat(raw_diary):
 	raw_diary = raw_diary.replace(" ","") #delete all whitespace
 	withtag_diary = raw_diary.split('#') #split diary and tags by #
 	newdiary = withtag_diary[0]
 	if len(withtag_diary) == 1:
-		tags = ["NULL"]
+		tags = ["Wechat"]
 	else:
 		tags = withtag_diary[1:]
-	# key must be str()
+		tags.append("Wechat")
+	
 	count = len(read_diary_all()[0])
-	countkey = "key*" + str(count)
-	edit_time = strftime("%Y %b %d %H:%M:%S", localtime())
+	countkey = "key@" + str(count) # key must be str()
+	edit_time = strftime("%Y %b %d %H:%M", localtime())
 	diary = {'time':edit_time,'diary':newdiary,'tags':tags}
 	kv.set(countkey,diary)
 
+def write_diary_web(newdiary,tags,count):
+	countkey = "key@" + str(count)
+	edit_time = strftime("%Y %b %d %H:%M", localtime())
+	diary = {'time':edit_time,'diary':newdiary,'tags':[tags]}
+	kv.set(countkey,diary)
+
+
 @app.route('/')
 def start():
-	diarylog = read_diary_all()[0]
+	diarylog = read_diary_all()[2]
 	return template("diarysae", diarylog=diarylog)
+
+@app.route('/', method='POST')
+def input_new():
+	count = len(read_diary_all()[0])
+	newdiary = unicode(request.forms.get('newdiary'),'utf-8')
+	tags = unicode(request.forms.get('tags'),'utf-8')
+	write_diary_web(newdiary,tags,count)
+	diarylog = read_diary_all()[2]
+	return template("diarysae", diarylog=diarylog)
+
+@app.route('/', method='DELETE')
+def delete():
+	temp = kv.getkeys_by_prefix("key@")
+	for i in temp:
+		kv.delete(i)
 
 @app.route('/wechat', method = 'POST')
 def response_wechat():
@@ -97,11 +127,11 @@ def response_wechat():
 	'''
 	HELP = '''
 	目前可使用的姿势:
-	- diary..# ~吐槽贴个#标签
-	    - 例如"diary..cool#nice"
+	- d= # ~吐槽贴个#标签
+	    - 例如"d=cool#nice"
 	    - cool为吐槽,nice为标签
 	    - 标签数可>=1
-	    - 例如"diary..a#b#c#d"
+	    - 例如"d=a#b#c#d"
 	    - a为吐槽,b/c/d为标签
 	- see    ~吐过的槽
 	- see#  ~吐过#标签的槽
@@ -112,16 +142,16 @@ def response_wechat():
 	    - 返回姿势指南
 	'''
 
-	if msg['Content'].startswith('diary..'):
-		raw_diary = msg['Content'][7:]
-		write_diary(raw_diary)
+	if msg['Content'].startswith('d='):
+		raw_diary = msg['Content'][2:]
+		write_diary_wechat(raw_diary)
 		count = len(read_diary_all()[0])
 		echo_str = u"Got! "+str(count)+u"条吐槽啦!"
 	elif msg['Content'] == 'see':
 		echo_str = read_diary_all()[1]
 	elif msg['Content'].replace(" ","").startswith('see#'):
 		tags = msg['Content'].replace(" ","")[4:]
-		tags = tags if tags else "NULL"
+		tags = tags if tags else "Wechat"
 		echo_str = read_diary_tags(tags)
 	else:
 		echo_str = HELP
@@ -131,11 +161,5 @@ def response_wechat():
 	
 	return echo_msg
 
-
-@app.route('/', method='DELETE')
-def delete():
-	temp = kv.getkeys_by_prefix("key*")
-	for i in temp:
-		kv.delete(i)
 
 application = sae.create_wsgi_app(app)

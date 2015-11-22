@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*- 
 # author: bambooom
 '''
-My Diary Wechat App - CLI
+My Diary Web App - CLI for client
 '''  
 import sys
 reload(sys)
@@ -9,6 +9,7 @@ sys.setdefaultencoding('utf-8')
 
 import requests
 from bs4 import BeautifulSoup
+import time
 import re
 
 HELP = '''
@@ -18,8 +19,23 @@ Input s/sync to sync the diary log.
 Input lt/ListTags to list all tags.
 Input st:TAG to set or delete tags
 Input FLUSH to clear all diary entries.
+      e:MSG to start wechat test
+Input e:?/h/H for help in wechat
+Input e:s to see diary in wechat
+Input e:d=<diary> to write diary in wechat
 '''
-url = "http://ommocpy.sinaapp.com/"
+
+send_msg = '''
+<xml>
+<ToUserName><![CDATA[bambooom]]></ToUserName>
+<FromUserName><![CDATA[gh_b2f5086656aa]]></FromUserName> 
+<CreateTime>%s</CreateTime>
+<MsgType><![CDATA[text]]></MsgType>
+<Content><![CDATA[%s]]></Content>
+</xml>
+'''
+
+url = "http://omoocpy.sinaapp.com/"
 
 def get_log_all():
 	response = requests.get(url)
@@ -30,21 +46,18 @@ def get_log_all():
 	return log
 
 def get_log_bytag(tags):
-	response = requests.get("http://bambooomhelloworld.sinaapp.com/")
+	response = requests.get(url)
 	soup = BeautifulSoup(response.text,"html.parser")
 	ti=list(soup.find_all('i', class_='etime'))
 	ta=list(soup.find_all('i', class_='tags'))
 	di=list(soup.find_all('pre',class_='diary'))
-	for i in range(len(list(ti))):
-		if ta[i].get_text() == 'TAG:'+tags:
-			print "%s  %s" %(ti[i].get_text(),di[i].get_text())
+	diary_tag = [di[i].get_text() for i in range(len(ti)) if tags in ta[i].get_text()]
+	return diary_tag 
 
 def get_tags():
 	response = requests.get(url)
 	soup = BeautifulSoup(response.text, "html.parser")
-	temp =[]
-	for i in soup.find_all('i', class_='tags'):
-		temp.append(i.get_text())
+	temp =[i.get_text() for i in soup.find_all('i', class_='tags')]
 	tag_set = list(set(temp))
 	for i in tag_set:
 		print i
@@ -61,20 +74,20 @@ def write_log(message, tags):
 	values = {'newdiary':message,'tags':tags}
 	response = requests.post(url, data=values)
 
+def wechat_cli():
 
 def client():
-
 	print HELP 
-	tags=''
+	tags='NULL'
 
 	while True:
 		print 'TAG:'+tags
 		message = raw_input('Input>')
-		if message in ['h','help','?']:
+		if message.lower() in ['h','help','?']:
 			print HELP
-		elif message in ['s','sync']:
-			get_log_bytag(tags)
-		elif message in ['q','quit']:
+		elif message.lower() in ['s','sync']:
+			print get_log_bytag(tags)
+		elif message.lower() in ['q','quit']:
 			print 'Bye~'
 			break
 		elif message in ['lt','ListTags']:
@@ -83,6 +96,10 @@ def client():
 			tags = message[3:]
 		elif message == 'FLUSH':
 			delete_log()
+		elif message.lower() in ['e:?','e:h','e:help']:
+			print HELP_wechat
+		elif message.lower() == 'e:s':
+			diary_tag = get_log_bytag("Wechat")
 		else:
 			write_log(message,tags)
 
