@@ -51,9 +51,10 @@ def get_tags():
 	response = requests.get(url)
 	soup = BeautifulSoup(response.text, "html.parser")
 	t = [i.get_text() for i in soup.find_all('i', class_='tags')] # list of lists
+	t = [t[i].split(" ") for i in range(len(t))]
 	t = [y for x in t for y in x] # one-dimensional list
-	t1 = [t[i] for i in range(len(t)) if t[i].startswith('tag')]]
-	t2 = ['TAG:'+t[i] for i in range(len(t)) if not t[i].startswith('tag')]]
+	t1 = [t[i] for i in range(len(t)) if t[i].startswith('TAG:')]
+	t2 = ['TAG:'+t[i] for i in range(len(t)) if not t[i].startswith('TAG:')]
 	tag_set = list(set(t1+t2))
 	for i in tag_set:
 		print i
