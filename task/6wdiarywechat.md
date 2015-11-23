@@ -53,7 +53,7 @@
 * 几乎完全照抄他人教程里的代码,但微信接入sae就是不成功. 在自己无法找到问题的时候, 不要大意地求助吧!
 * 所以问了赖同学.有大腿就是好~赖同学帮我找到问题的根源是因为我新浪sae没有实名认证过,所以会在网页自动出现悬浮框提示,这个悬浮框的html源码造成我返回给微信的echostr就是不匹配的. 这时才意识到上周教练free提示说尽早去实名认证不会踩坑.....
 * anyway,最终感谢教练告诉我还可以通过已经有实名认证过的人邀请我协作开发的方法来解决.
-* 所以说有问题自己不知道怎么解决就求助,找同学,找教练,找大妈都可以~
+* 所以说有问题自己不知道怎么解决就求助,找同学,找教练都可以~
 
 ## 2. 接收读取微信消息xml [版本](https://github.com/bambooom/OMOOC2py/commit/498429866d5f94b1c0da7c22375e4183b1d63563)
 * [官方文档](http://mp.weixin.qq.com/wiki/17/fc9a27730e07b9126144d9c96eaf51f9.html)
@@ -80,7 +80,7 @@ def parse_xml_msg(recv_xml):
 		msg[child.tag] = child.text
 	return msg
 ```
-* 返回msg的例子比如是这样的: ```msg={'FromUserName': 'omoocpy', 'MsgId': 'hdsicwecewew2233333', 'ToUserName': 'bambooom', 'Content': 'diary WTF', 'MsgType': 'text', 'CreateTime': '20151120'}```
+* 返回msg的例子比如是这样的: ```msg={'FromUserName': 'omoocpy', 'MsgId': '29473494572132233333', 'ToUserName': 'bambooom', 'Content': 'diary WTF', 'MsgType': 'text', 'CreateTime': '14434923789'}```
 
 ## 3. 被动回复消息
 * [官方文档](http://mp.weixin.qq.com/wiki/18/c66a9f0b5aa952346e46dc39de20f672.html)
@@ -97,3 +97,53 @@ def parse_xml_msg(recv_xml):
 * 用户真正看到的内容也在```Content```里
 * 并且此处的```FromUserName以及ToUserName```和接收消息时应该正好相反
 * 通过读取和判定接收的消息内容```msg['Content']```就可以设置如何回复消息
+
+## 4. 手机端输入一条日记带多个标签 [版本](https://github.com/bambooom/OMOOC2py/commit/5450c0abfbc87d11b7831923204eed306b801ebc)
+* 在重新设计微信帮助文档的时候,突然想起来是否可以一条日记带多个标签,比如```aaa#bbb#ccc```这样bbb和ccc都是aaa的标签
+* 想要分别读取日记和标签的话就可以用```str.split("#")```来分开就可以了,```split()```返回的是list
+* 想要查看某一标签下日记,在读取所有日记的基础之上加个标签的判定即可 [版本](https://github.com/bambooom/OMOOC2py/commit/a8c0881315155457838d385d06eca112838a932c)
+
+## 5. 命令行端模拟应答
+* 在上周的基础上, 如果需要读取某个标签下日记时, 通过soup获取到的标签因为前面对多个标签的修改, 这里获取的变成了标签的list
+* 大妈讲了一下列表推导的方法之后自己稍微尝试了一下,的确很不错而且都只有一行, 于是把可以应用到的地方都修改了一下
+* 顺便遇到的几个小问题
+	* 例如```List1```是一个list,但它每个element也是一个list, 如```List1=[['a'],['a','b'],['a','b','c']]```如果想要把这个nested list转换成一个单一的list,也可以用列表推导得到
+		```>>>List1 = [y for x in List1 for y in x]``` 
+		```>>>print List1```
+		```>>>['a','a','b','a','b','c']```
+		* 一开始看有点混乱, 认真仔细想想这个逻辑就会理解到其实很简单的双重循环
+	* 另一个是经常在推导里面只看到用```if```,如果想用```if else```应该如何操作呢
+		* 假设希望如果为a就不变,不为a就在前面加上a.在ipython里尝试
+		```>>>List2 = [List1[i] for i in range(len(List1)) if List1[i]=='a' else 'a'+List1[i]]```
+		* 出现error, 重新google了一下python+list comprehension+if else
+		* 得到[Stackoverflow上参考](http://stackoverflow.com/questions/4260280/python-if-else-in-list-comprehension), 其实换一下顺序就可以了
+		```>>>List2 = [List1[i] if List1[i] == 'a' else 'a'+List1[i] for i in range(len(List1))]
+		```>>>print List2```
+		```>>>['a','a','ab','a','ab','ac']
+
+* 命令行模拟应答时, 需要模拟发送xml的消息, 此时模拟自然是只能发送给localhost.在本地命令行是无法直接发消息到微信的. 但在本地可以直接将日记写入wechat标签,相当于是写入5w的网站应用之中,微信手机端就可以通过回放所有日记而看到本地命令行新写入的日记.
+```
+<xml><ToUserName><![CDATA[gh_b2f5086656aa]]></ToUserName>
+<FromUserName><![CDATA[bambooom]]></FromUserName>
+<CreateTime>%s</CreateTime>
+<MsgType><![CDATA[text]]></MsgType>
+<Content><![CDATA[%s]]></Content></xml>```
+	* 发送POST请求通过requests包进行,可以google python+xml+requests+post, [参考](http://stackoverflow.com/questions/12509888/how-can-i-send-an-xml-body-using-requests-library)
+	```requests.post(url, data = msg, headers = headers)```
+
+## 6. 添加关注事件推送帮助文档及修改帮助文档
+* 因为周六将微信公众号发出来请大家帮忙测试之后,得到了几项反馈.
+	* 写入日记时要输入"diary.."很麻烦,很多人拼不对diary都....orz
+		* 后面改成了"d="来作为写日记的开头
+	* 一开始关注了的时候没有提示帮助文档
+		* 这个我一开始看的教程里面写说msg的content如果是"Hello2BizUser"就表明是新关注用户.
+		* 但我设计的回复中,其实除了写日记等的标准用法,其余输入都会返回帮助文档,所以这个设置应该也是包含在内的, 但是没有起作用, 说明关注/订阅公众号时发送给后台的信息已经不是"Hello...."了.
+		* 看回官方文档才发现,这叫做[接收事件推送](http://mp.weixin.qq.com/wiki/14/f79bdec63116f376113937e173652ba2.html).关注/取消关注/扫描二维码/点击菜单这些是```msg['MsgType'] == event```的消息, 所以发送给后台的xml消息格式是不一样的.所以我才没有判定出关注这个事件来.
+		* 加上判定关注事件的部分:
+		```if msg['MsgType'] == 'event':
+			if msg['Event'] == 'subscribe':
+				echostr = HELP
+				.....```
+## 未尽事项:
+- [ ] 认证功能?
+- [ ] 消息加密?
