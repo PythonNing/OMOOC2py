@@ -108,19 +108,23 @@ def parse_xml_msg(recv_xml):
 * 大妈讲了一下列表推导的方法之后自己稍微尝试了一下,的确很不错而且都只有一行, 于是把可以应用到的地方都修改了一下
 * 顺便遇到的几个小问题
 	* 例如```List1```是一个list,但它每个element也是一个list, 如```List1=[['a'],['a','b'],['a','b','c']]```如果想要把这个nested list转换成一个单一的list,也可以用列表推导得到
-		```>>>List1 = [y for x in List1 for y in x]``` 
-		```>>>print List1```
-		```>>>['a','a','b','a','b','c']```
+		```
+		>>>List1 = [y for x in List1 for y in x] 
+		>>>print List1
+		>>>['a','a','b','a','b','c']
+		```
 		* 一开始看有点混乱, 认真仔细想想这个逻辑就会理解到其实很简单的双重循环
 	* 另一个是经常在推导里面只看到用```if```,如果想用```if else```应该如何操作呢
 		* 假设希望如果为a就不变,不为a就在前面加上a.在ipython里尝试
-		```>>>List2 = [List1[i] for i in range(len(List1)) if List1[i]=='a' else 'a'+List1[i]]```
+		```
+		>>>List2 = [List1[i] for i in range(len(List1)) if List1[i]=='a' else 'a'+List1[i]]```
 		* 出现error, 重新google了一下python+list comprehension+if else
 		* 得到[Stackoverflow上参考](http://stackoverflow.com/questions/4260280/python-if-else-in-list-comprehension), 其实换一下顺序就可以了
-		```>>>List2 = [List1[i] if List1[i] == 'a' else 'a'+List1[i] for i in range(len(List1))]
-		```>>>print List2```
-		```>>>['a','a','ab','a','ab','ac']
-
+		```
+		>>>List2 = [List1[i] if List1[i] == 'a' else 'a'+List1[i] for i in range(len(List1))]
+		>>>print List2
+		>>>['a','a','ab','a','ab','ac']
+		```
 * 命令行模拟应答时, 需要模拟发送xml的消息, 此时模拟自然是只能发送给localhost.在本地命令行是无法直接发消息到微信的. 但在本地可以直接将日记写入wechat标签,相当于是写入5w的网站应用之中,微信手机端就可以通过回放所有日记而看到本地命令行新写入的日记.
 ```
 <xml><ToUserName><![CDATA[gh_b2f5086656aa]]></ToUserName>
