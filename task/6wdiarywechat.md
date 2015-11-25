@@ -47,9 +47,10 @@
 * 此处代码完全可以照抄他人的成果.另外,其实此验证的中间加密过程完全可忽略,只要获取echostr并返回echostr即可完成验证.
 	* 我的理解是这样,微信做这个接入验证的目的只是检验服务器的有效性,服务器可以正常返回正确值即可.加密等的过程其实是对自己的网站或应用而言的保护.并不能让随便什么其他人就给自己的网站发出请求并接入.
 	* ~~另外一点是,在第一次接入成功后,此验证代码即可注释掉,微信并不会不断发送此验证去检验服务器的有效性.~~
-	* 上面这个是错误认识,感谢赖同学纠正.在sae后台访问日志可看到微信还是会每次发送query string来验证信息.
-	    * 疑问是是否可以不返回值给微信,或者如果返回错误值给微信
-,会有怎样的问题, *待验证*
+	* (20151125 added)上面这个是错误认识,感谢赖同学纠正.在sae后台访问日志可看到微信还是会每次发送query string来验证信息.
+	    * 疑问:是否可以不返回值给微信,或者如果返回错误值给微信
+,会有怎样的问题
+        * ↑微信并不会再次认证,但是应该将此验证理解为保护自己的后台接口只能为微信所用.后台服务器验证信息来自微信才能进行正常业务逻辑, 信息安全呐~
 * 由此可以看出,微信在这里完全只是个展示的地方,一个连接处,所有的后台程序都不在微信,不由微信管理,数据库本身都是在新浪sae
 
 ### 微信接入时遇到了坑
@@ -111,7 +112,7 @@ def parse_xml_msg(recv_xml):
 * 大妈讲了一下列表推导的方法之后自己稍微尝试了一下,的确很不错而且都只有一行, 于是把可以应用到的地方都修改了一下
 * 顺便遇到的几个小问题
 	* 例如```List1```是一个list,但它每个element也是一个list, 如```List1=[['a'],['a','b'],['a','b','c']]```如果想要把这个nested list转换成一个单一的list,也可以用列表推导得到
-		```
+		```python
 		>>>List1 = [y for x in List1 for y in x] 
 		>>>print List1
 		>>>['a','a','b','a','b','c']
@@ -119,17 +120,17 @@ def parse_xml_msg(recv_xml):
 		* 一开始看有点混乱, 认真仔细想想这个逻辑就会理解到其实很简单的双重循环
 	* 另一个是经常在推导里面只看到用```if```,如果想用```if else```应该如何操作呢
 		* 假设希望如果为a就不变,不为a就在前面加上a.在ipython里尝试
-		```
+		```python
 		>>>List2 = [List1[i] for i in range(len(List1)) if List1[i]=='a' else 'a'+List1[i]]```
 		* 出现error, 重新google了一下python+list comprehension+if else
 		* 得到[Stackoverflow上参考](http://stackoverflow.com/questions/4260280/python-if-else-in-list-comprehension), 其实换一下顺序就可以了
-		```
+		```python
 		>>>List2 = [List1[i] if List1[i] == 'a' else 'a'+List1[i] for i in range(len(List1))]
 		>>>print List2
 		>>>['a','a','ab','a','ab','ac']
 		```
 * 命令行模拟应答时, 需要模拟发送xml的消息, 此时模拟自然是只能发送给localhost.在本地命令行是无法直接发消息到微信的. 但在本地可以直接将日记写入wechat标签,相当于是写入5w的网站应用之中,微信手机端就可以通过回放所有日记而看到本地命令行新写入的日记.
-```
+```xml
 <xml><ToUserName><![CDATA[gh_b2f5086656aa]]></ToUserName>
 <FromUserName><![CDATA[bambooom]]></FromUserName>
 <CreateTime>%s</CreateTime>
@@ -147,7 +148,7 @@ def parse_xml_msg(recv_xml):
 		* 但我设计的回复中,其实除了写日记等的标准用法,其余输入都会返回帮助文档,所以这个设置应该也是包含在内的, 但是没有起作用, 说明关注/订阅公众号时发送给后台的信息已经不是"Hello...."了.
 		* 看回官方文档才发现,这叫做[接收事件推送](http://mp.weixin.qq.com/wiki/14/f79bdec63116f376113937e173652ba2.html).关注/取消关注/扫描二维码/点击菜单这些是```msg['MsgType'] == event```的消息, 所以发送给后台的xml消息格式是不一样的.所以我才没有判定出关注这个事件来.
 		* 加上判定关注事件的部分:
-		```
+		```python
 		if msg['MsgType'] == 'event':
 			if msg['Event'] == 'subscribe':
 				echostr = HELP
