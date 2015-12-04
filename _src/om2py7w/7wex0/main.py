@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*- 
-#qpy:MyDiary WebApp on Android
-#qpy:2
-#qpy:fullscreen
+#qpy:webapp:MyDiaryApp
 #qpy://127.0.0.1:8080/
 """
 MyDiary WebApp on QPython
