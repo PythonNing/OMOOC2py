@@ -13,6 +13,10 @@ from time import localtime, strftime
 import xml.etree.ElementTree as ET
 import requests
 import os
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 #### 常量定义 #########
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -94,7 +98,7 @@ def write_qpy():
     #    msg[child.tag] = child.text
 
     edit_time = strftime("%Y %b %d %H:%M", localtime())
-    new_diary = edit_time, content, tags
+    new_diary = edit_time.decode('utf-8'), content.decode('utf-8'), tags.decode('utf-8')
     write_diary_qpy(new_diary)
     log = read_diary_all()
     return template(ROOT+'/diaryqpy.html', diarylog=log)
