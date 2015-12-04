@@ -53,6 +53,7 @@ def __ping():
 def read_diary_all():
     conn = sqlite3.connect(ROOT + '/MyDiary.db')
     c = conn.cursor()
+    c.execute('CREATE TABLE if not exists diary (time text, content text, tag text)')
     c.execute('SELECT * FROM diary')
     diary = c.fetchall()
     return diary
@@ -60,7 +61,8 @@ def read_diary_all():
 def write_diary_qpy(new_diary):
     conn = sqlite3.connect(ROOT + '/MyDiary.db')
     c = conn.cursor()
-    c.execute('INSERT INTO diary VALUES (?,?)', new_diary)
+    c.execute('CREATE TABLE if not exists diary (time text, content text, tag text)')
+    c.execute('INSERT INTO diary VALUES (?,?,?)', new_diary)
     conn.commit()
     conn.close()
 
@@ -76,7 +78,7 @@ def home():
 def write_qpy():
     headers = {'Content-Type': 'application/xml'}
     content = request.forms.get('newdiary')
-    #tags = 'QPY'
+    tags = 'QPY'
     response_msg = '''
     <xml>
     <ToUserName><![CDATA[%s]]></ToUserName>
@@ -94,7 +96,7 @@ def write_qpy():
     #    msg[child.tag] = child.text
 
     edit_time = strftime("%Y %b %d %H:%M", localtime())
-    new_diary = edit_time, content
+    new_diary = edit_time, content, tags
     write_diary_qpy(new_diary)
     log = read_diary_all()
     return template(ROOT+'/diaryqpy.html', diarylog=log)
