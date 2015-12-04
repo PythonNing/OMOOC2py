@@ -8,9 +8,10 @@ MyDiary WebApp on QPython
 
 from bottle import Bottle, ServerAdapter, run, route, request, template
 import sqlite3
+#import sae.kvdb
 import time
 from time import localtime, strftime
-import xml.etree.ElementTree as ET
+#import xml.etree.ElementTree as ET
 import requests
 import os
 
@@ -19,7 +20,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 #### 常量定义 #########
 ROOT = os.path.dirname(os.path.abspath(__file__))
-
+#kv = sae.kvdb.Client()
 
 ######### QPYTHON WEB SERVER ###############
 
@@ -68,7 +69,6 @@ def write_diary_qpy(new_diary):
     conn.commit()
     conn.close()
 
-
 ######### WEBAPP ROUTERS ###############
 app = Bottle()
 @app.route('/')
@@ -78,28 +78,13 @@ def home():
 
 @app.route('/', method = 'POST')
 def write_qpy():
-    headers = {'Content-Type': 'application/xml'}
-    content = request.forms.get('newdiary')
+    message = request.forms.get('newdiary')
     tags = 'QPY'
-    response_msg = '''
-    <xml>
-    <ToUserName><![CDATA[%s]]></ToUserName>
-    <FromUserName><![CDATA[%s]]></FromUserName>
-    <CreateTime>%s</CreateTime>
-    <MsgType><![CDATA[text]]></MsgType>
-    <Content><![CDATA[%s]]></Content>
-    </xml>
-    '''
-    echostr = response_msg % ('server','phone',str(int(time.time())),content)
-    r = requests.post('http://omoocpy.sinaapp.com/wechat',data=echostr, headers = headers)
-    #root = ET.fromstring(r.content)
-    #msg = {}
-    #for child in root:
-    #    msg[child.tag] = child.text
-
+    values = {'newdiary':message,'tags':tags}
+    r = requests.post('http://omoocpy.sinaapp.com/',data=values)
     edit_time = strftime("%Y %b %d %H:%M", localtime())
-    new_diary = edit_time.decode('utf-8'), content.decode('utf-8'), tags.decode('utf-8')
-    write_diary_qpy(new_diary)
+    newdiary = edit_time.decode('utf-8'), message.decode('utf-8'), tags.decode('utf-8')
+    write_diary_qpy(newdiary)
     log = read_diary_all()
     return template(ROOT+'/diaryqpy.html', diarylog=log)
 
